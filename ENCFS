@@ -1,0 +1,40 @@
+Jeśli używasz Ubuntu lub Linux Mint lub innych dystrybucji Linuksa opartych na Ubuntu, możesz użyć oficjalnego PPA za pomocą poniższego polecenia:
+
+#sudo add-apt-repository ppa:gencfsm
+
+#sudo apt-get update
+
+#sudo apt-get install gnome-encfs-manager
+
+Pakiety dla Debiana, Fedory i openSUSE są dostępne  tutaj: 
+https://software.opensuse.org/download.html?project=home:moritzmolch:gencfsm&package=gnome-encfs-manager
+
+Jeśli używasz GNOME na Wayland (na przykład Ubuntu 17.10), powinieneś użyć tego rozszerzenia GNOME, aby dodać szybki dostęp do górnego panelu. Przeczytaj ten artykuł, aby dowiedzieć się, jak korzystać z rozszerzeń GNOME .
+
+Po zainstalowaniu może być konieczne wylogowanie, aby aplikacja działała. Przejdź do menu aplikacji i uruchom Gnome Encfs Manager. Kliknij znak +, aby dodać nowy folder, który będziesz blokować hasłem. Folder chroniony hasłem nosi nazwę skrytki w terminologii tej aplikacji.
+
+Menedżer Gnome Encfs
+
+W tym miejscu możesz utworzyć nowy katalog lub przejść do istniejącego. Możesz spróbować zabezpieczyć istniejący folder hasłem, ale pliki, które są już obecne w folderze, nie zostaną zablokowane. Z tego powodu proponuję utworzyć nowy folder i przenieść pliki po zabezpieczeniu hasłem.
+
+Nie zapomnij użyć hasła, które z łatwością zapamiętasz. Jeśli zapomnisz hasła, powinieneś także zapomnieć o plikach, które są z nim zablokowane.
+
+Blokowanie folderu w systemie Linux
+
+Po utworzeniu folderu możesz rozpocząć kopiowanie plików do niego. Twój zablokowany folder będzie widoczny zamontowany dysk, gdy zostanie odblokowany.
+
+Zablokuj folder w systemie Ubuntu Linux
+
+Możesz uzyskać kontrolę nad zablokowanym folderem z rozszerzenia GNOME. Nie jestem pewien, czy inne środowiska graficzne mają coś podobnego. Zostawiam to twojej eksploracji.
+
+Steruj zablokowanym folderem za pomocą Gnome Encfs Manager
+
+Po skopiowaniu plików w tajnym folderze po prostu odmontuj. Możesz to zrobić, odznaczając zamontowany folder z rozszerzenia panelu, jak pokazano powyżej. Aby uzyskać do niego dostęp, użyj programu uruchamiającego na górnym panelu lub uruchom ponownie program.
+
+Możesz także użyć zaawansowanych ustawień, takich jak automatyczne uruchamianie lub automatyczne odmontowywanie po pewnym czasie bezczynności.
+
+Zabezpiecz hasłem folder za pomocą Gnome Encfs Manager
+
+Zauważ, że tak zwany tajny katalog będzie widoczny i dostępny dla każdego w jego normalnej lokalizacji. Jednak jego zawartość nie będzie w czytelnym formacie, nawet nazwy plików. Po zamontowaniu zablokowanego folderu stanie się czytelny.
+
+To wszystko, co musisz wiedzieć o folderach chroniących hasłem za pomocą Gnome Encfs Manager.
