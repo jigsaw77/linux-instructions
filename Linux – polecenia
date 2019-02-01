@@ -1,0 +1,673 @@
+Podstawowe polecenia
+Dokładny opis każdego poleceń można zobaczyć poprzez wydanie komendy :
+
+man polecenie
+
+Polecenia można podzielić na następujące grupy :
+
+– polecenia związane z plikami i katalogami
+– polecenia związane z systemem plików
+– polecenia związane z zarządzaniem użytkownikami
+– polecenia związane z zarządzaniem modułami jądra
+– polecenia związane z procesami
+– polecenia związane z siecią
+– polecenia związane z wyszukiwaniem
+– polecenia związane z szukaniem pomocy
+– inne polecenia
+
+ 
+
+Polecenia związane z plikami i katalogami :
+ 
+
+cd ścieżka_dostępu
+Opis : zmiana bieżącego katalogu
+
+ 
+
+touch [-acm] [MMDDhhmm] lista_plików
+Opis : modyfikacja daty i czasu utworzonego pliku, tworzenie nowego pliku
+Opcje:
+-a – zmienia tylko czas ostatniego dostępu do pliku
+-c – jeśli plik nie istnieje nie zostanie utworzony
+-m – zmienia czas ostatniej modyfikacji pliku
+MMDDhhmm – czas w postaci : miesiąc dzień godzina minuta (np.: 10122122)
+
+ 
+
+rm [-fr] nazwa_pliku
+Opis : kasowanie pliku
+Opcje :
+-f – pomija konieczność potwierdzenia pytania o usuwanie plików
+-r – usuwa zawartość katalogu wraz z podkatalogami
+
+ 
+
+cp [-flpRs] plik plik_docelowy_lub_katalog
+Opis : kopiowanie plików i katalogów
+Opcje :
+-f – powoduje, że program nie uprzedza o nadpisaniu pliku docelowego o tej samej nazwie
+-l – tworzy dowiązanie zamiast kopiować plik
+-p – opcja ta powoduje, że kopiowane pliki zachowują w miarę możliwości swoje atrybuty
+-R – kopiuje zawartość katalogów i podkatalogów
+-s – tworzy dowiązanie symboliczne zamiast kopiować plik
+
+ 
+
+mv [ -fu] plik plik_docelowy_lub_katalog
+Opis : zmiana nazwy lub przenoszenie pliku i katalogu
+Opcje :
+-f – powoduje, że program nie uprzedza o nadpisaniu pliku docelowego o tej samej nazwie
+-u – przenosi pliki tylko wówczas, gdy istniejące pliki docelowe są starsze
+
+ 
+
+chmod [-R][ugoa][+-=][rwx] plik_lub_katalog
+Opis : zmiana atrybutów pliku
+Opcje :
+-R – zmiana praw dla plików i katalogów wraz z podkatalogami
+-u (user) – właściciel pliku lub katalogu
+-g (group) – grupa, do której należy dany plik lub katalog
+-o (other) – wszyscy pozostali
++ – dodaje prawa
+– – odbiera prawa
+= – sprawia, że plik lub katalog będzie miał prawa tylko takie, jakie zostaną podane po tej opcji
+-r – prawo czytania danych
+-w – prawo zapisu (edycji)
+-x – prawo uruchamiania
+
+ 
+
+chown [-Rf] właścicel[:grupa] plik_lub_katalog
+Opis : zmiana właściciela pliku lub katalogu
+Opcje :
+-R – zmiana właściciela i/lub grupy plików i katalogów wraz z podkatalogami
+-f – zmienia właściciela i/lub grupę tylko tym plikom, które należą do podanego właścicela i/lub grupy
+
+ 
+
+mkdir [-mp] katalog
+Opis : tworzenie katalogów
+Opcje :
+-m=prawa – nadaje tworzonym katalogom podane prawa
+-p – nie ostrzega, jeśli katalog o podanej nazwie już istnieje
+
+ 
+
+rmdir [-p] katalog
+Opis : kasowanie katalogów
+Opcje :
+-p – usuwa katalog wraz z katalogami nadrzędnymi
+
+ 
+
+ls [-al] plik_lub_katalog
+Opis : wyświetla informacje o plikach i katalogach
+Opcje :
+-a – wyświetla wszystkie pliki w katalogu, wraz z plikami ukrytymi
+-l – listuje w długim formacie pełną informację o plikach i katalogach
+
+ 
+
+ln [-dfs] plik_lub-katalog link
+Opis : tworzenie dowiązań
+Opcje :
+-d – tworzy dowiązanie twarde do katalogów
+-f – nie informuje o nadpisywaniu istniejącego pliku
+-s – tworzy dowiązanie symboliczne
+
+ 
+
+less nazwa_pliku
+Opis : podgląd plików tekstowych
+
+ 
+
+cat nazwa_pliku
+Opis : przesyła plik na standardowe wejście
+
+ 
+
+Polecenia związane z systemem plików :
+ 
+
+df [-aht] urządzenie
+Opis : sprawdzenie ilości wolnego miejsca na dysku
+Opcje :
+-a – wyświetla informacje o każdym systemie plików
+-h – wyświetlane informacje są podawane w łatwych do odczytania jednostkach
+-t=typ – wyświetla informacje tylko o systemie danego typu
+
+ 
+
+mkfs [-t] [-c] urządzenie_blokowe
+Opis : tworzenie systemu plików
+Opcje :
+-t – określa typ tworzonego systemu plików, domyślnie ext2
+-c – sprawdza uszkodzone bloki urządzenia przed utworzeniem systemu plików
+
+ 
+
+mount [-t] [-o] urządzenie_lub_katalog
+Opis : montowanie systemu plików
+Opcje :
+-t – typ montowanego systemu plików
+-o – po tej opcji następuje podanie oddzielonych przecinkami wartości :
+   remount – przemontowanie zamontowanego już systemu plików
+ro – montuje system plików w tryb tylko do odczytu
+rw – montuje system plików w tryb tylko do odczytu i zapisu
+nouser – zabrania zwykłemu użytkownikowi montowania systemu plików
+
+ 
+
+umount urządzenie_lub_katalog
+Opis : odmontowanie systemu plików
+
+ 
+
+e2fsck [-pcf] [-b] urządzenie
+Opis : testowanie systemu plików
+Opcje :
+-p – napraw automatycznie system plików bez żadnych pytań
+-c – uruchom program badblocks w celu znalezienia uszkodzonych bloków
+-f – wymuś sprawdzanie, nawet jeśli system plików wydaje się być czysty
+-b superblok – użyj podanego superbloku
+
+ 
+
+fdisk [-lv] [-s] urządzenie
+Opis : obsługa partycji
+Opcje :
+-l – drukuje tablice partycji
+-v – drukuje numer wersji fdiska
+-s partycja – jest partycją wybranego dysku
+urządzenie – jest plikiem z katalogu /dev wskazującym na nasz dyski (np.: hda)
+
+ 
+
+fdformat [-n] urządzenie
+Opis : niskopoziomowy format dyskietki
+Opcje :
+-n – wyłączenie weryfikacji sformatowanej dyskietki
+
+ 
+
+Polecenia związane z zarządzaniem użytkownikami :
+ 
+
+useradd [-d] [-g] [-G] [-s] [-u] nazwa_użytkownika
+Opis : dodawanie użytkowników
+Opcje :
+-d katalog_domowy – wartość ta określa katalog domowy użytkownika, domyślnie zmienna ta przyjmuje wartość taką samą jak nazwa użytkownika
+-g gupa_początkowa – jest nazwą grupy początkowej użytkownika. Grupa ta musi już istnieć. W przypadku nie podania tej zmiennej system sam utworzy grupę dla użytkownika o nazwie zgodnej z nazwą użytkownika
+-G inne_grupy – lista dodatkowych grup, do których zostanie przypisany użytkownik
+-s powłoka – nazwa powłoki użytkownika
+-u uid – numeryczna wartość identyfikatora użytkownika. Wartość ta musi być niepowtarzalna i większa od 99. W przypadku nie podania tej zmiennej system sam przydzieli użytkownikowi pierwszy wolny numer.
+
+ 
+
+userdel [-r] nazwa_użytkownika
+Opis : usuwanie użytkowników
+Opcje :
+-r – zostaną usunięte pliki w katalogu domowym użytkownika, sam katalog domowy i pliki buforowania poczty
+
+ 
+
+groupadd [-g] nazwa_grupy
+Opis : dodawanie grup
+Opcje :
+-g gid – numeryczna wartość identyfikatora grupy. Wartość ta musi być niepowtarzalna. Wartości od 0-99 są zarezerwowane dla kont systemowych i nie powinny być używane. W przypadku nie podania gid system sam przydzieli grupie pierwszą wolną wartość.
+
+ 
+
+groupdel nazwa_grupy
+Opis : usuwanie istniejących grup
+
+ 
+
+usermod [-d] [-g] [-G] [-s] [-u] [-l] nazwa_użytkownika
+Opis : modyfikowanie danych użytkowników
+Opcje :
+-l login – nowa nazwa użytkownika
+pozostałe opcje mają identyczne znaczenie jak opcje z polecenia useradd
+
+ 
+
+groupmod [-g][-n] grupa
+Opis : modyfikowanie danych grup
+Opcje :
+-g gid – numeryczna wartość identyfikatora grupy
+-n grupa – nowa nazwa grupy
+
+ 
+
+passwd [-l][-u][-d][-S] nazwa_użytkownika
+Opis : zmiana hasła użytkownika
+Opcje :
+-l – zablokowanie konta
+-u – ponowne udostępnienie konta
+-S – wyświetlenie informacji o stanie konta
+
+ 
+
+su nazwa_użytkownika
+Opis : chwilowa zmiana aktywnego użytkownika
+
+ 
+
+Polecenia związane z zarządzaniem modułami jądra :
+ 
+
+insmod [-fp] [-o] plik_modułu
+Opis : instalowanie modułu jądra
+Opcje :
+-f – usiłuje załadować moduł nawet jeśli wersja uruchomionego jądra i jądra dla którego moduł został skompilowany nie zgadza się
+-p – sprawdza czy moduł może być załadowany bez kłopotów
+-o nazwa_modułu – podanie dokładnej nazwy modułu
+
+ 
+
+rmmod [-a] moduł
+Opis : usuwanie modułu
+Opcje :
+-a – usuń wszystkie nieużywane moduły
+
+ 
+
+lsmod
+Opis : listowanie aktywnych modułów
+
+ 
+
+depmod moduł
+Opis : sprawdzanie zależności między modułami
+
+ 
+
+modprobe moduł
+Opis : instalowanie modułu z potrzebnymi opcjami i modułami
+
+ 
+
+modinfo [-adnp] plik_modułu
+Opis : informacje o modułach
+Opcje :
+-a – wypisuje autora modułu
+-d – wypisuje opis modułu
+-n – wypisuje nazwę pliku modułu
+-p – wypisuje parametry wspierane przez moduł
+
+ 
+
+Polecenia związane z procesami :
+ 
+
+top [-p]
+Opis : listuje procesy o największym obciążeniu procesora i wyświetla ich statystyki w czasie
+rzeczywistym
+Opcje :
+-p – monitoruje jedynie proces o danym id procesu
+
+ 
+
+pidof nazwa_programu
+Opis : wyświetlenie numeru procesu wybranego programu
+
+ 
+
+ps [-auxr][txx]
+Opis : listuje aktywne procesy
+Opcje :
+-a – pokaż procesy innych użytkowników
+-u – format użytkownika – podaje nazwę użytkownika i czas startu
+-x – pokaż procesy bez kontrolującego terminala
+-r – pokaż tylko pracujące procesy
+-txx – pokaż tylko procesy z kontrolującym tty XX
+
+ 
+
+kill [-s] numer_procesu
+Opis : zakańcza działanie procesu
+Opcje :
+-s – rodzaj wysłanego sygnału
+
+ 
+
+jobs
+Opis : listuje aktywne programy
+
+ 
+
+fg numer_zadania
+Opis : ustawienie procesu na front
+
+ 
+
+bg numer_zadania
+Opis : przeniesienie procesu w tło
+
+ 
+
+Polecenia związane z siecią :
+ 
+
+ifconfig <if> <IP> <nm> <bc>
+Opis : konfigurowanie interfejsu sieciowego
+Opcje :
+if – rodzaj interfejsu (np.: Eth0)
+IP – adres IP interfejsu
+nm – maska sieci
+bc – adres rozgłoszeniowy
+
+ 
+
+ifconfig interfejs up
+Opis : uruchamianie interfejsu sieciowego
+
+ 
+
+ifconfig interfejs down 
+Opis : zatrzymywanie interfejsu sieciowego
+
+ 
+
+route add|del [-net|-host] gw cel netmask dev
+Opis : kontrola trasowania
+Opcje :
+add – dodanie drogi do tablicy trasowania
+del – usunięcie drogi z tablicy trasowania
+-net – oznacza, że celem jest sieć
+-host – oznacza, że celem jest stacja
+gw brama – adres bramy sieciowej
+cel – docelowa sieć lub stacja
+netmask netmaska – maska sieci
+dev interfejs – wymusza związanie trasy z podanym interfejsem
+
+ 
+
+netstat [-riM]
+Opis : wyświetla połączenia sieciowe i statystyki połączeń
+Opcje :
+-r -wyświetl tablice routingu
+-i – wyświetla tablice wszystkich działających interfejsów sieciowych
+-M – wyświetl listę wszystkich maskaradowanych sesji
+
+ 
+
+Polecenia związane z wyszukiwaniem :
+ 
+
+grep [-civ] wzorzec [plik]
+Opis : wyszukiwanie ciągów znaków
+Opcje :
+-c – podaje liczbę wierszy w których znaleziono pasujący wzorzec
+-i – pomija różnicę w wielkości liter
+-v – wyświetla wiersze, w których nie ma podanego wzorca
+plik – nazwa pliku, w którym nastepuje przeszukanie
+
+ 
+
+find
+Opis : szukanie plików
+
+ 
+
+whereis [-bms] nazwa pliku
+Opis : lokalizuje źródła, binaria i dokumentację man
+Opcje :
+-b – szukaj tylko binariów
+-m – szukaj tylko sekcji dokumentacji man
+-s – szukaj tylko źródeł
+
+ 
+
+Polecenia związane z szukaniem pomocy :
+ 
+
+man polecenie
+Opis : manual systemowy
+
+ 
+
+info
+Opis : podręcznik GNU
+
+ 
+
+apropos klucz
+Opis : przeszukuje bazy z dokumentacją pod kątem słów kluczowych
+
+ 
+
+Inne polecenia :
+ 
+
+date [-ds]
+Opis : podaje lub ustawia datę systemową i czas
+Opcje :
+-d DATA – podaje datę i czas, określone podanym wyrażeniem
+-s DATA – ustawia podany czas i datę
+
+ 
+
+logout , exit
+Opis : zakończenie sesji
+
+ 
+
+clear
+Opis : czyszczenie ekranu terminala
+
+ 
+
+shutdown [-akh] czas ostrzeżenie
+Opis : restart lub wyłączenie systemu
+Opcje :
+-a – użyj /etc/shutdown.allow w celu zabronienia wykonywania tego polecenia
+-k – wyślij komunikat o zamknięciu ale nie wykonuj prawdziwego zamknięcia systemu
+-h – zatrzymaj po wyłączeniu systemu
+czas – czas po którym system zostanie zamknięty.
+Forma czasu : HH(godzina):MM(minuty) lub +m gdzie m jest liczbą minut do odczekania
+
+ 
+
+halt
+Opis : zamknięcie systemu
+
+ 
+
+reboot
+Opis : przeładowanie systemu
+
+Polecenie at
+Składnia polecenia at jest następująca :
+
+at -f {plik z zadaniem} czas_uruchomienia_zadania
+lub
+at czas_uruchomienia_zadania
+
+Po naciśnięciu klawisza ENTER wpisujemy zadanie do wykonania.
+
+Określanie czasu dla polecenia at.
+Czas można określić na wiele sposobów. Domyślnie przyjmowany jest czas 24-godzinny. Podawanie minut jest opcjonalne. Jeśli dodany zostanie przyrostek am lub pm, czas będzie traktowany jako czas 12-godzinny.
+Przy podawaniu czasu dozwolone jest stosowanie słów mających specjalne znaczenie:
+midnight (północ), noon (południe), today (dziś), tomorrow (jutro) oraz now (teraz).
+Po słowie now należy podać czas, po jakim polecenie ma zostać wykonane.
+Oprócz wartości oznaczających godziny można również podawać, w którym miesiącu zadanie ma się rozpocząć (za pomocą liczb od 1 do 12 lub pierwszych trzech liter angielskiej nazwy miesiąca). Rok oznaczany jest liczbą czterocyfrową. Dni tygodnia podaje się za pomocą pierwszych trzech liter nazwy angielskiej.
+Odstępy czasu pozwalają na podanie pory rozpoczęcia zadania w odniesieniu do czasu bieżącego. Do ich określania służy znak +, po którym następuje liczba i jeden z wyrazów: minute, hour, day, week lub year (można również używać liczby mnogiej, na przykład weeks). Słowo next (następny) ma takie samo znaczenie, jak +1.
+
+Oto kilka przykładów :
+
+at 14:12 January 9
+at 2:12am Jan 9
+at now + 5 minutes
+
+ 
+
+Polecenie crontab
+Składnia polecenia crontab :
+
+crontab -l | -r | -e
+
+-e otwiera plik z zadaniami
+-l listuje zadania
+-r usuwa zadania
+
+Określanie czasu dla polecenia crontab :
+
+Składnia pliku z zadaniami jest następująca :
+
+min godz dzień_miesiąca miesiąc dzień_tygodnia zadanie
+
+Dane podawane są w pięciu kolumnach rozdzielonych przecinkami; myślnik oznacza zakres, natomiast gwiazdka – wszystkie dostępne wartości.
+
+Oto lista poszczególnych pól i dostępnych w nich wartości :
+
+Minuty     0-59
+Godziny    0-23
+Dni miesiąca     1-31
+Miesiące    1-12
+Dni tygodnia    0-6, 0 = niedziela
+
+Oto kilka przykładów :
+
+co pięć minut
+*/5 * * * * /zadania/zad1
+
+co godzinę -1 minutę po pełnej godzinie
+01 * * * * /zadania/zad1
+
+codziennie 5 minut po północy
+05 0 * * * /zadania/zad1
+
+co tydzień w niedziele 10 minut po północy
+10 0 * * 0 /zadania/zad1
+
+ 
+
+Historia poleceń
+Powłoka bash posiada zdolność przywoływania wcześniej wydawanych poleceń przez użycie klawiszy kursora. Bash rejestruje je w pliku .bash_history , który znajduje się w katalogu domowym użytkownika.
+
+Historię poleceń określają dwa parametry :
+
+HISTFILE – wskazuje na plik zawierający wywołane wcześniej polecenia
+HISTSIZE – określa ile ostatnio wydanych poleceń ma być przechowywanych w pliku historii
+
+Aby obejrzeć listę ostatnio wydawanych poleceń bez otwierania powyższego pliku należy skorzystać z polecenia history z parametrem określającym liczbę wierszy, które mają być wyświetlone :
+
+history 10
+
+pokaże 10 ostatnio użytych poleceń.
+
+Aby powtórzyć wcześniej wydane polecenie można użyć następującej komendy :
+!3
+gdzie 3 jest trzecią komendą z listy wyświetlonej poleceniem history .
+
+ 
+
+Aliasy
+Bash daje nam ciekawy mechanizm aliasów umożliwiających zastępowanie złożonych poleceń krótszymi, łatwiejszymi do zapamiętania nazwami.
+Aliasy tworzymy korzystając z polecenia alias , którego składnia jest następująca :
+
+alias ‘nasza_definicja’=’polecenie’
+np.:
+alias ‘p’=’ps -aux’
+
+Teraz poprzez wydanie polecenia p otrzymamy listę wszystkich procesów.
+Zdefiniowane aliasy możemy zlikwidować poleceniem unalias :
+
+unalias p
+
+ 
+
+Dowiązania stałe i symboliczne
+Mechanizm dowiązań (linków) ułatwia dostęp do plików ukrytych głęboko w strukturze katalogów lub umożliwia zgromadzenie potrzebnych plików w jednym katalogu.
+
+Linki dzielimy na stałe i symboliczne.
+
+Dowiązania stałe charakteryzują się tym, że posiadają ten sam i-węzeł co wskazywany plik. W praktyce oznacza to, że dowiązanie takie zawiera pełną informację o pliku i w razie skasowania oryginalnego pliku dowiązanie nadal będzie zawierać informacje o tym pliku (jego zawartość).
+Dowiązanie stałe tworzymy poleceniem :
+
+ln plik_lub_katalog link
+
+Dowiązania symboliczne służą jedynie do wskazywania na jakiś plik. Umożliwiają one prace na danym pliku poprzez jego dowiązanie. W przypadku skasowania pliku, do którego prowadzi link symboliczny niemożliwe staje się korzystanie z tego dowiązania (nie zawiera on wówczas żadnych informacji).
+Dowiązania symboliczne tworzymy poleceniem :
+
+ln -s plik_lub_katalog link
+
+ 
+
+Przekierowania wejścia i wyjścia
+Przekierowania zazwyczaj wykorzystywane są do odczytania danych z jakiegoś urządzenia lub pliku albo do wysłania danych na urządzenie lub plik.
+
+Do przekierowań danych służą specjalne znaki :
+< dane na wejście
+> dane z wyjścia
+
+Najprostszym przykładem przekierowania może być wyświetlenie zawartości jakiegoś pliku poleceniem :
+
+cat < plik.txt
+
+Aby utworzyć nowy plik i wpisać do niego dowolny tekst możemy użyć przekierowania danych z wyjścia :
+
+cat > plik.txt
+
+Polecenie to utworzy nam plik : plik.txt i umieści w nim tekst wpisany z klawiatury.
+
+Jeśli będziemy chcieli ponownie dodać jakiś tekst do tego pliku należy użyć polecenia :
+
+cat >> plik.txt
+
+Spowoduje to dodanie następnych wierszy z informacją do pliku.
+
+Innym przykładem przekierowań może być zapisanie do pliku zawartości jakiegoś katalogu :
+
+ls -al > plik.txt
+
+ 
+
+Skrypty powłoki – wprowadzenie
+Skrypty powłoki są programami składającymi się z poleceń powłoki i poleceń sterujących programem, takich jak : IF, FOR, REPEAT, WHILE itp.
+Skrypty umożliwiają pobranie danych od użytkownika lub z pliku, przetworzenie ich i wyświetlenie wyniku na ekranie monitora lub zapisanie go na dowolnym urządzeniu.
+
+Aby nasz skrypt mógł zostać uruchomiony należy nadać mu prawo do uruchamiania poleceniem :
+
+chmod +x nazwa_skryptu
+
+Każdy skrypt powinien rozpoczynać się linijką :
+
+#!/bin/bash
+Zapis ten oznacza to, że do przetworzenie skryptu zostanie użyta powłoka bash.
+
+Przykładowy skrypt może wyglądać następująco :
+
+#!/bin/bash
+# to jest tylko komentarz
+echo ‘skrypt wyswietla aktualny katalog roboczy’
+echo -e “biezacy katalog :\n\a`pwd`”
+
+ 
+
+#!/bin/bash
+echo “informacje o uruchomionym skrypcie”
+echo “nazwa skryptu : $0”
+echo “ilosc parametrow : $#”
+echo “pierwszy parametr to : $1”
+echo “drugi parametr to : $2”
+echo -e “zestawienie wszytkich parametrow :\n$*”
+
+ 
+
+Skrypty powłoki – wyrażenie read
+Wyrażenie read używane jest do pobierania danych z klawiatury i zapisywania ich w zmiennych.
+
+Składnia wyrażenia read jest następująca:
+
+read zmienna1,zmienna2,..zmiennaN
+
+Przykładowy skrypt :
+
+#!/bin/bash
+echo “Podaj swoje imię:”
+read imie
+echo “Cześć $imie !”
