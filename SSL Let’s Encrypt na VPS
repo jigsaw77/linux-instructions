@@ -1,0 +1,50 @@
+Ten samouczek pokazuje, jak skonfigurować certyfikat TLS / SSL z Let’s Encrypt na serwerze Ubuntu 16.04 z uruchomionym Apache jako serwerem WWW.
+Certyfikaty SSL są używane na serwerach sieciowych do szyfrowania ruchu między serwerem a klientem, zapewniając dodatkowe bezpieczeństwo użytkownikom uzyskującym dostęp do aplikacji. Let’s Encrypt zapewnia łatwy sposób na uzyskanie i zainstalowanie zaufanych certyfikatów za darmo.
+
+Wymagania wstępne
+Aby ukończyć ten przewodnik, będziesz potrzebować:
+Serwer Ubuntu 16.04.
+Serwer sieciowy Apache2 zainstalowany z jedną lub więcej domenami poprawnie skonfigurowanymi za pomocą wirtualnych hostów, które określają ServerName.
+
+Krok 1 – Zainstaluj klienta Let’s Encrypt
+Najpierw dodaj repozytorium Cerbot:
+
+sudo add-apt-repository ppa:certbot/certbot
+Musisz nacisnąć, ENTER aby zaakceptować. Następnie zaktualizuj listę pakietów, aby pobrać informacje o nowym repozytorium:
+
+sudo apt-get update
+I wreszcie zainstaluj Certbot z nowego repozytorium za pomocą apt-get:
+
+sudo apt-get install python-certbot-apache
+Certbot jest teraz gotowy do użycia.
+
+Krok 2 – Skonfiguruj certyfikat SSL
+Generowanie certyfikatu SSL dla Apache za pomocą Certbota jest dość proste. Klient automatycznie uzyska i zainstaluje nowy certyfikat SSL, który jest ważny dla domen dostarczonych jako parametry.
+Aby uruchomić instalację i uzyskać certyfikat obejmujący tylko jedną domenę, uruchom certbot poleceniem:
+
+sudo certbot --apache -d moja.domena.pl
+Jeśli chcesz zainstalować pojedynczy certyfikat, który jest ważny dla wielu domen lub subdomen, możesz wpisać je jako dodatkowe parametry do polecenia. Pierwsza nazwa domeny na liście parametrów będzie domeną podstawową używaną przez Let’s Encrypt do utworzenia certyfikatu i z tego powodu zalecamy podanie nazwy domeny najwyższego poziomu jako pierwszej na liście, a następnie dowolnej dodatkowej subdomeny. lub aliasy:
+
+sudo certbot –apache -d moja.domena.pl -d www.moja.domena.pl
+
+W tym przykładzie będzie to domena podstawowa moja.domena.pl .
+
+Jeśli masz wiele hostów wirtualnych, uruchom certbot dla każdego, aby wygenerować nowy certyfikat dla każdego z nich. Możesz dystrybuować wiele domen i subdomen na swoich wirtualnych hostach.
+
+Po zainstalowaniu zależności zostanie wyświetlony przewodnik krok po kroku, w celu dostosowania opcji certyfikatu. Zostaniesz poproszony o podanie adresu e-mail, aby odzyskać utracone klucze i powiadomienia, a będziesz mógł wybrać między włączeniem http i https uzyskaniem dostępu lub wymuszeniem wszystkich żądań przekierowania https.
+
+Po zakończeniu instalacji powinno być możliwe znalezienie wygenerowanych plików certyfikatów na
+
+/etc/letsencrypt/live.
+Możesz zweryfikować status swojego certyfikatu SSL za pomocą poniższego linku (nie zapomnij zamienić  moja.domena.pl na swoją domenę podstawową ):
+
+https://www.ssllabs.com/ssltest/analyze.html?d=moja.domena.pl&latest
+Powinieneś teraz mieć dostęp do swojej strony internetowej za pomocą https.
+
+Krok 3 – Weryfikacja automatycznego odnawiania certyfikatów
+Certyfikaty Let’s Encrypt mają ważność tylko 90 dni. Jednak zainstalowany przez nas pakiet certbot-a zajmuje się tym dla nas, uruchamiając certbot renew dwa razy dziennie przez systemowy timer. W dystrybucjach niesystemowych tę funkcjonalność zapewnia skrypt cron umieszczony w /etc/cron.d. Zadanie jest uruchamiane dwa razy dziennie i odnawia certyfikat, który kończy w ciągu trzydziestu dni.
+
+Aby przetestować proces odnawiania, możesz wydać komendę certbot:
+
+sudo certbot renew --dry-run
+Jeśli nie widzisz żadnych błędów, wszystko jest gotowe. W razie potrzeby Certbot odnowi certyfikaty i przeładuje serwer Apache, aby pobrać zmiany. Jeśli proces automatycznego odnawiania się nie powiedzie, Let’s Encrypt wyśle ​​wiadomość na podany adres e-mail, ostrzegając Cię, gdy Twój certyfikat wkrótce wygaśnie.
