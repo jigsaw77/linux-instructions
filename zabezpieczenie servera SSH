@@ -1,0 +1,67 @@
+Aby zminimalizować możliwość włamania na nasz serwer warto poświęcić chwilę aby odpowiednio zabezpieczyć serwer SSH.
+
+Plik konfiguracyjny serwera SSH możemy znaleźć w
+
+/etc/ssh/sshd_config
+Otwieramy plik jakimś edytorem  i przystępujemy do jego edycji:
+
+nano /etc/ssh/sshd_config
+Ustaw odpowiednią wersje protokołu dla SSH
+Pierwszą, rzeczą na która warto zwrócić uwagę w pliku konfiguracyjnym jest wersja protokołu obsługiwana przez serwer SSH. Istnieją dwie. Ze względów bezpieczeństwa należy używać wersji nr 2, która została przeprojektowana od zera ze względu na ujawnione w wersji 1.5 podatności na ataki krypto analityczne, umożliwiające wstrzykiwanie komend do zaszyfrowanego strumienia SSH.
+
+Jeżeli używasz Debiana to domyślnie masz już ustawioną odpowiednia wersje protokołu (nr 2). Jeśli używasz innych dystrybucji możesz spotkać się z taką linijka:
+
+Protocol 2,1
+należy ją zmieniać na:
+
+Protocol 2
+Zablokuj zdalne logowanie dla konta root’a
+Dużym zagrożeniem dla naszego serwera są różnego typu boty, które w większości przypadków próbują złamać hasło root’a. Aby tego uniknąć należy wyłączyć możliwość bezpośredniego logowania użytkownika root poprzez SSH na serwer.
+
+Uwaga: Przed wyłączeniem logowania na konto root należy utworzyć konto nowego użytkownika, którego dane wykorzystamy do późniejszego logowania. Jeśli tego nie zrobimy a mimo tego zablokujemy dostęp dla roota uniemożliwimy sobie możliwość zalogowania na nasz serwer.
+
+Aby to zrobić należy zmienić linijkę:
+
+PermitRootLogin yes
+na
+
+ PermitRootLogin no
+Zmiana portu SSH
+Domyślnie serwer SSH oczekuje połączeń na porcie 22. Często wykorzystują to boty które próbują dokonać ataku na tym właśnie porcie. Kolejnym zagrożeniem są skanery portów które mogą dostarczyć atakującym informacji jakie usługi są uruchomione na jakiś portach. Skanują one zazwyczaj domyślnie tylko do portu 1024 (gdzie jak widzimy łapie się port 22 – z naszym serwerem SSH). Warto by to zmienić na port jakiś powyżej 1024 a najlepiej na 5000+.
+
+Znajdujemy linię:
+
+Port 22
+ i zamieniamy ją na np.
+Port 5250
+
+ restartujemy serwer
+/etc/init.d/ssh restart
+teraz aby połączyć się z naszym serwerem należy wydać polecenie:
+
+ssh uzytkownik@ipserwera -p 5250
+gdzie 5250 oznacza nr ustawionego portu
+Kontrola dostępu
+Kolejnym krokiem jaki można wykonać jest ograniczenie dostępu do SSH dla określonych użytkowników lub grup użytkowników.
+
+Odpowiadają za to opcje:
+
+ AllowUsers user1_zSSH user2
+ DenyUsers user3_bezSSH user4
+ AllowGroups nazwa_grupy_z_SSH
+ DenyGroups grupa_bez_ssh
+
+ Dodatkowe opcje
+
+ PermintEmpty no - zabrania logowania się na konto bez podania hasła
+ StrictModes yes - tryb rygorystyczny
+
+ Dodatkowym zabezpieczeniem może być umożliwienie logowania się na serwer tylko z określonych adresów IP. Jeśli posiadamy stałe IP (neostrada np takiego nie posiada). W pliku /etc/hosts.allow możemy wpisać:
+ sshd : 127.0.0.1 : allow
+ sshd : Twoj-adres-IP : allow
+ a w pliku /etc/hosts.deny
+
+ sshd: ALL
+na koniec restartujemy usługę:
+
+ sudo service ssh restart
