@@ -1,0 +1,99 @@
+Każdy plik ma swojego właściciela. Jest nim najczęściej użytkownik, który ów plik stworzył. Taki plik może zostać usunięty lub edytowany tylko przez tego konkretnego użytkownika, dlatego jeśli ktoś inny chciałby go zmienić, musi nadać mu odpowiednie prawa.
+
+chown i chgrp:
+Są to polecenia, które zmieniają właściciela danego pliku np.:
+
+sudo chown nazwa_nowego_właściciela
+lub
+
+sudo chgrp nazwa_nowej_grupy_użytkowników
+Sprawdzenie praw pliku:
+
+Do sprawdzania uprawnień pliku/katalogu służy polecenie:
+
+ls -l nazwa_pliku
+Rezultatem tego pliku będzie coś takiego:
+
+drwxr-xr-x nazwa_użytkownika nazwa_grupy data_i_godzina_utworzenia_pliku nazwa_pliku
+To co nas najbardziej interesuje to właśnie:
+
+drwxr-xr-x
+Aby dobrze to zrozumieć, należy tą frazę podzielić na trzy części:
+
+drwxr-xr-x
+
+Właściwie to 4 części, ale pierwsza nie jest aż tak istotna (jest to część koloru czarnego). Informuje nas o tym, czy dany obiekt jet plikiem, katalogiem lub linkiem. Zmienia się odpowiednio:
+d - katalog
+l - (mała litera L) link 
+- - plik
+Pierwsza interesująca nas część (koloru czerwonego) odpowiada za uprawnienia właściciela pliku.
+Druga część (koloru zielonego) odpowiada za uprawnienia grupy, do której należy plik.
+Trzecia część (koloru niebieskiego) odpowiada za uprawnienia innych użytkowników.
+
+Jak widać, każda z części składa się z trzech znaków, może to być:
+
+r - odczyt
+w - zapis
+x - wykonanie
+- - brak uprawnień do (odczytu/zapisu/wykonania - w zależności od miejsca, na którym stoi)
+Aby dowiedzieć się, kto ma jakie uprawnienia, należy odpowiednio podzielić frazę i odczytać prawa:
+Właściciel – rwx – ma prawa do odczytu, zapisu, wykonania
+Grupa – r-x – ma prawa do odczytu i wykonania
+Inni użytkownicy – r-x – prawa do odczytu i wykonania.
+
+Nadawanie/odbieranie praw:
+Prawa dostępu do pliku zmieniamy używając komendy chmod według przykładu:
+
+chmod -opcje uprawnienie plik/katalog
+W pozycji opcje możemy wpisać następujące frazy:
+
+-c ,--changes - wyświetla informację o zmodyfikowanych plikach
+-f ,--silent, --quiet - wyłącza komunikaty o błędach
+-v ,--verbose - pokazuje informacje o modyfikowanych plikach
+--reference=PLIK - używa uprawnień innego pliku
+-R ,--recursive - zmienia prawa rekursywnie (można tym czasami nieźle namieszać:)
+--help - wyświetla pomoc o użyciu polecenia
+Teraz określamy komu nadamy/odbierzemy prawa (część uprawnienie):
+
+a - wszyscy (all)
+u - użytkownik (user)
+g - grupa (group)
+o - inni (others)
+Następnie decydujemy czy prawa nadajemy/odbieramy:
+
++ - nadanie praw
+- - odebranie praw
+= - nadane prawa będą jedynymi jakie plik będzie posiadał
+I na koniec ustalamy uprawnienia, nie powinno być już wątpliwości:
+
+r - prawo odczytu
+w - prawo do zapisu
+x - prawo do wykonania (lub dostęp w przypadku katalogów)
+u - ustawia prawa takie jak ma użytkownik
+g - ustawia prawa takie jak ma grupa
+o - ustawia prawa takie jak mają inni
+Przykład polecenia:
+
+sudo chmod o+rwx plik
+Nadajemy prawa odczytu, zapisu oraz wykonania dla innych użytkowników.
+
+Inny sposób ustawienia uprawnień:
+Innym sposobem ustawienia uprawnień jest metoda oktalna. Jak sama nazwa wskazuje, opiera się ona na 8 cyfrach:
+
+1 - tylko wykonanie
+2 - tylko zapis
+3 - zapis i wykonanie
+4 - tylko odczyt
+5 - odczyt i wykonanie
+6 - odczyt i zapis
+7 - zapis, odczyt i wykonanie
+Polecenie wygląda identycznie:
+
+sudo chmod uprawnienia plik
+Gdzie w miejscu uprawnienia, wstawiamy odpowiednio trzy cyfry (według podziału przedstawionego wyżej na kolorowo)
+Pierwsza cyfra – prawa właściciela
+Druga cyfra – prawa grupy
+Trzecia cyfra – prawa innych użytkowników
+Na przykład:
+
+sudo chmod 666 plik
