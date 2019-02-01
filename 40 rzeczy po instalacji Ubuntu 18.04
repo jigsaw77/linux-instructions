@@ -1,0 +1,525 @@
+Premiera nowej wersji Ubuntu już za nami. Ta wersja jest o tyle szczególna, iż jest to LTS (Long Term Support) czyli dłużej wspierana przez Canonical. Jeśli ktoś się wstrzymywał z aktualizacją lub wciąż korzysta z poprzedniego wydania LTS to jest to dobry moment na aktualizację.
+
+ 
+
+Ubuntu jak zwykle dostępne jest w wielu różnych odmianach oraz trybach instalacji:
+
+https://www.ubuntu.com/download/desktop/thank-you?country=PL&version=18.04&architecture=amd64
+
+Alternatywny mini obraz może pobrać tu:
+
+https://www.ubuntu.com/download/alternative-downloads
+
+Spin Ubuntu oparty o interfejs Budgie:
+
+https://ubuntubudgie.org/downloads
+
+Ubuntu Mate
+
+https://ubuntu-mate.org/download/
+
+Xubuntu
+
+http://xubuntu.org/getxubuntu
+
+Lubuntu
+
+http://lubuntu.net/
+
+Kubuntu
+
+https://www.kubuntu.org/getkubuntu/
+
+ 
+
+ 
+
+Jak zwykle również po każdej instalacji jest kilka kroków, które warto wykonać oraz zainstalować odpowiednie oprogramowanie. Kroki nie różnią się bardzo od tych z poprzednich wydań. Kilka ciekawostek odnośnie tego wydania. Po pierwsze, jak zawsze mamy podbite wersje pakietów, po drugie tuż po instalacji wyświetli się nam okienko informujące o najnowszych zmianach i nowościach:
+
+ 
+
+
+
+Po kliknięciu przycisku Dalej pojawi się kolejna plansza z pytaniem czy chcemy skonfigurować funkcję Livepatch. Livepatch umożliwia aktualizacje jądra o poprawki bezpieczeństwa bez konieczności restartu komputera. Funkcja ta jest z pewnością przydatna dla serwerów, ale chyba już mniej dla zwykłych komputerów.
+
+ 
+
+
+
+Kolejna plansza to zgoda (lub nie) na przesyłanie statystyk do Canonical.
+
+ 
+
+
+
+I na koniec zaproszenie do uruchomienia graficznego programu do zarządzania oprogramowaniem.
+
+ 
+
+
+
+Na koniec dodam, że Canonical był w nie lada kłopocie gdyż w ostatniej wersji, na której bazuje 18.04, z programu nautilus (Files) została usunięta funkcjonalność związana z plikami na pulpicie. W czystej wersji Gnoma plików na pulpicie nie ma. W związku z powyższym wersja LTS korzysta z Files w wersji 3.26. Ciekawe co będzie później bo z wersji na wersję z Gnoma usuwane są kolejne funkcjonalności, które są raczej popularne wśród użytkowników. Dla przykładu, z kolejnego Gnoma, z poziomu Files, zniknie możliwość uruchamiania programów i skryptów. Złośliwi mogą powiedzieć, że wkrótce Gnom sam się usunie :>
+
+ 
+
+To w zasadzie tyle z nowości. Wszystkie komendy wykonujemy w terminalu, ale również możemy posłużyć się nakładkami graficznymi jak: Oprogramowanie czy też Synaptic, w których wystarczy podać nazwę programu.
+
+ 
+
+0) Krok zerowy wciąż istnieje czyli wybór trybu, w jakim chcemy pracować. Jest to Ubuntu lub Ubuntu na Xorg. W pierwszym przypadku Ubuntu będzie korzystało z Waylanda, a w drugim z starych Xów. Chociaż domyślnym ustawieniem jest pierwsza opcja to jednak polecałbym przestawienie wajchy na: Ubuntu na Xorg zwłaszcza jeśli używamy starszych programów korzystających z Xów lub myślmy o graniu. To nie jest jeszcze czas na Waylanda.
+
+ 
+
+
+
+ 
+
+1) Jak zawsze rozpoczynamy od aktualizacji czyli od włączenia: (wciskamy klawisz winlogo) Aktualizacje oprogramowania -> Ustawienia i zaznaczamy w zakładce Inne oprogramowanie pole Partnerzy Canonical, a w zakładce  Aktualizacje: Aktualizacje polecane. Zamykamy program, jeszcze raz włączamy w celu odświeżenia repozytorium i instalujemy wszelkie aktualizacje.
+
+
+
+
+
+
+
+ 
+
+2) Sterowniki graficzne: wyszukujemy je w programie Dodatkowe sterowniki po czym wybieramy z listy ten najbardziej odpowiadający.
+
+
+
+ 
+
+Użytkownicy kart Nvidia mogą zainstalować dodatkowe repozytorium z nowszymi wersjami sterowników:
+
+sudo add-apt-repository ppa:graphics-drivers/ppa
+sudo apt-get update
+sudo apt-get install nvidia-graphics-driver-xxx
+
+ 
+
+Użytkownicy AMD mają jeszcze lepiej bo nie muszą nic robić gdyż sterowniki są otwarte i znajdują się w głównych pakietach. Co więcej są one już lepsze niż zamknięte sterowniki.
+
+ 
+
+3) Mając zaktualizowany system wraz z działającymi sterownikami od grafiki czas rozpocząć dostosowywanie nasze systemu. Wpierw należy się udać się do Ustawień.
+
+
+
+
+
+Gdzie możemy zarządzać:
+
+ 
+
+Wifi
+
+Bluetooth
+
+Tło – zmiana tła na ekranie i ekranie blokady. Uf wreszcie koniec kombinowania z LightDM.
+
+Dock – skąpe ustawienia docka, o tym później
+
+Powiadomienia – można wybrać typy powiadomień jakie chcemy otrzymywać
+
+Wyszukiwanie – czyli usługa indeksowania programów i plików (po wciśnięciu winlogo). Co ciekawe indeksowanie plików nie zacznie działać dopóki nie zainstalujemy dodatkowego programu: sudo apt install tracker i przelogujemy się. Po instalacji warto kliknąć na małe koło zębate aby wybrać katalogi do indeksacji. Pierwsze indeksowanie może trochę trwać i przydusić komputer. Status indeksowania po wydaniu w terminalu komendy: tracker status
+
+Region i język
+
+Ustawienia dostępu
+
+Konta online
+
+Prywatność – warto powyłączać niektóre opcje
+
+Udostępnienie
+
+Dźwięk – ustawienia źródeł dźwięku
+
+Zasilanie
+
+Sieć
+
+Urządzenia – ustawienia klawiatury, myszki, ekranów, nośników wymiennych. W ustawieniach ekranu warto włączyć opcję Nocne światło, dzięki czemu o określonej godzinie barwy na ekranie będą cieplejsze.
+
+Informacje – po instalacji kilku programów warto tu wrócić i ustawić domyślne programy jak kalendarz, przeglądarka etc.
+
+ 
+
+4) Gnome-tweak-tool – czyli dostrajanie środowiska graficznego Gnoma. Wraz z odejściem Unity odchodzą w zapomnienie wszystkie narzędzia jak Unity tweak tool itp. Teraz mamy jedno i oficjalne za pomocą którego możemy zmieniać czcionki, górny panel, dekoracje okien, wybrać programy startowe, ustawienia pulpitu, motywy graficznego czy też rozszerzenia.
+
+sudo apt install gnome-tweak-tool
+
+
+
+5) Rozszerzenia – największą zaletą Gnoma jest możliwość instalowania rozszerzeń, które znacznie polepszają komfort pracy. Domyślnie Ubuntu nie ma zainstalowanych żadnych rozszerzeń poza biednym Dockiem, który ma imitować pasek Unity. Niestety tak jak Unity miało mało opcji konfiguracyjnych tak samo domyślny Dock ma ich mało, a szkoda bo jest to fork najbardziej popularnego  rozszerzenia do Gnoma.
+
+ 
+
+Aby zainstalować rozszerzenia do Gnomea należy udać się na oficjalną stronę: https://extensions.gnome.org/ i zgodzić się na pobranie dodatku extensions.gnome.org
+
+ 
+
+
+
+To nie wszystko, należy jeszcze zainstalować pakiet: sudo apt install chrome-gnome-shell umożliwiający pobieranie dodatków poprzez stronę. Jeśli wszystko się udało to po odświeżeniu przeglądarki powinny zniknąć wszystkie banery. Instalacja odbywa się poprzez kliknięcie na  przycisk OFF i wyrażenie zgody na instalację. Poniżej kilka rozszerzeń, które warto mieć 😉
+
+ 
+
+a) Alternate tab  – łatwiejsze przeglądanie alt-tab, który nie grupuje okien
+
+b) Applications menu – menu z programami, które pojawi się w lewej części panelu
+
+c) Coverflow – alternatywa dla alternate tab
+
+d) Dash to dock – najważniejszy dodatek, który umożliwia utworzenia paska/docka w dowolnej części ekranu, posiadający mnóstwo ustawień. Po jego instalacji domyślny dock Ubuntu zostanie wyłączony
+
+e) Dash to panel – bardzo dobra alternatywa dla Dash to dock, zamiast tworzenia osobnego paska na pulpicie, użyty zostanie pasek na górnym panelu. Must have dla minimalistów.
+
+f) Launch new instance – umożliwia otwieranie nowej instancji programu przy kliknięciu na program w widoku przeglądania zamiast przechodzenia do już otwartej wersji
+
+g) Media Player Indicator – powoduje utworzenie ikony w prawej części panelu, przez którą możemy sterować uruchomionym odtwarzaczem muzyki
+
+h) Native Window Placement – bardziej uporządkowany widok uruchomionych programów po wciśnięciu klawisza winlogo
+
+i) Open Weather – pogoda 🙂
+
+j) Places status indicator – tworzy na panelu menu ze skrótami najważniejszych katalogów użytkownika
+
+k) Topicons Plus – dzięki temu dodatkowi na panelu pojawią się ikony dla niektórych programów jak. np steam, skype i inne. Niestety to kolejny dodatek, który przestaje działać z powodu zmian w Gnomie. Alternatywą może być: https://extensions.gnome.org/extension/615/appindicator-support/
+
+l) User themes – umożliwia korzystanie z motywów użytkownika
+
+ 
+
+W razie problemów ze stabilnością zalecałbym wyłączenie wszystkich dodatków i włączanie ich pojedynczo.
+
+ 
+
+6) Dconf-editor – edytor ustawień gnome-shella. Normalnie nie jest to niezbędne do życie, ale Canonical popsuło trochę gnoma poprzez zmianę niektórych domyślnych ustawień np. wyłączenie tzw. hot-corners przez co niektóre rozszerzenia nie będą działać jak np. Applications menu.
+
+ 
+
+sudo apt install dconf-editor
+
+ 
+
+Nawigujemy do org – gnome – shell i włączamy enable-hot-corners
+
+ 
+
+
+
+ 
+
+7) Nieśmiertelne ikony Faenza 🙂
+
+sudo apt install faenza-icon-theme
+
+Ikony możemy włączyć przy pomocy Gnome-Tweak -Tool
+
+Warto również zajrzeć na stronę gnome-look i przejrzeć inne zestawy ikon, które instaluje się poprzez skopiowanie rozpakowanej paczki do katalogu ~/.icons (trzeba utworzyć jeśli nie istnieje). Inne ciekawe zestawy ikon to Numix, Papirus, Paper i przeróżne remixy, których jest mnóstwo w sieci.
+
+ 
+
+Płaski motyw ikon to np. Paper:
+
+sudo add-apt-repository ppa:snwh/pulp
+
+sudo apt-get update
+
+sudo apt-get install paper-icon-theme
+
+ 
+
+8) Motywy – podobnie jak ikony, motywy ustawiamy poprzez gnome-tweak-toola. Jeden z popularniejszych motywów to np Arc-theme:
+
+sudo apt install arc-theme
+
+ 
+
+lub Adapta
+
+ 
+
+sudo add-apt-repository ppa:tista/adapta
+sudo apt update
+sudo apt install adatpa-gtk-theme
+
+ 
+
+
+
+ 
+
+9)  Dropbox – wiadomo – ściągamy paczkę ze oficjalnej strony dla 64bitowego systemu https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2015.10.28_amd64.deb i instalujemy:
+
+sudo dpkg -i dropbox_2015.10.28_amd64.deb
+
+ 
+
+10) mc – midnight commander – klon norton commandera pod linuxa jeśli ktoś używał DoS’a 😉
+
+sudo apt install mc
+
+
+
+ 
+
+11) Wine – jeśli ktoś zamierza korzystać z oprogramowania Windows to należy wpierw dodać repozytorium aby móc cieszyć się zawsze najnowszą wersją Wine:
+
+ 
+
+wget -nc https://dl.winehq.org/wine-builds/Release.key
+sudo apt-key add Release.key
+sudo apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/
+sudo apt-get update
+
+ 
+
+sudo apt-get install --install-recommends winehq-stable
+sudo apt-get install --install-recommends winehq-devel
+sudo apt-get install --install-recommends winehq-staging
+
+ 
+
+Najlepiej instalować wersję devel lub staging.
+
+ 
+
+Istnieje jeszcze kilka innych niemniej ciekawych wersji Wine obsługujących bardziej eksperymentalne poprawki usprawniające pracę Vulkana czy WoW, ale o tym w osobnej notce.
+
+ 
+
+12) Dosbox – emulator do odpalania starych DOSowych gier
+
+sudo apt install dosbox
+
+ 
+
+13) ScummVM – kolejny emulator, ale tym razem ukierunkowany na przygodówki DOSowe
+
+sudo apt install scummvm
+
+
+
+ 
+
+ 
+
+14) Synaptic – do graficznego zarządzania pakietami
+
+sudo apt install synaptic
+
+
+
+ 
+
+15) Gimp zamiast Photoshopa – wiadomo 🙂
+
+sudo apt install gimp
+
+
+
+ 
+
+16) Inkscape – program graficzny do tworzenia grafiki wektorowej
+
+sudo apt install inkscape
+
+
+
+ 
+
+17) VLC – jeden z lepszych kombajnów do oglądania filmów i nie tylko
+
+sudo apt install vlc
+
+
+
+18) SMPlayer – bardzo dobra nakładka graficzna na mplayer’a lub mpv’a wraz z funkcjonalnością ściągania napisów z opensubtitles czy też obsługą chromecasta… i wiele więcej
+
+sudo apt install smplayer
+
+
+
+ 
+
+19) Clementine – najlepszy (wg. mnie) odtwarzacz muzyki, radia, podcastów. Oparty o wczesną wersję Amaroka.
+
+sudo apt install clementine
+
+
+
+ 
+
+20) Calibre – niezbędny kombajn do zarządzania ebookami oraz czytnikami. Wersja w repozytoriach jest dosyć stara więc należy posłużyć skryptem ze strony Calibre: Binary Install
+
+ 
+
+https://calibre-ebook.com/download_linux
+
+ 
+
+
+
+ 
+
+21 Napiprojekt – napisy do filmów – http://nocnypingwin.pl/napiprojekt-pod-linuxa/
+
+Dodatkowo, przekopiowanie skryptu do katalogu ~/.local/share/nautilus/scripts/ spowoduje, że skrypt będzie zawsze dostępny pod prawym klawiszem myszy.
+
+ 
+
+22) Gaupol – bardzo dobry edytor napisów umożliwiające jednoczesny pogląd filmu jak linii czasu
+
+sudo apt install gaupol
+
+
+
+ 
+
+23) Play on linux – nakładka graficzna do Wine
+
+wget -q "http://deb.playonlinux.com/public.gpg" -O- | sudo apt-key add -
+sudo wget http://deb.playonlinux.com/playonlinux_trusty.list -O /etc/apt/sources.list.d/playonlinux.list
+sudo apt update
+sudo apt install playonlinux
+
+ 
+
+Polecam zapoznanie się również z alternatywą jaką jest Lutris: https://lutris.net/ Lutris działa na podobnej zasadzie jak Play on Linux, a, ostatnio jest bardzo popularny z powodu posiadania różnych eksperymentalnych wersji Wine dla poszczególnych gier przez co nie trzeba samemu kompilować.
+
+ 
+
+24) Gparted – do zarządzania partycjami
+
+sudo apt-get install gparted
+
+
+
+ 
+
+25) Kodi dawniej xbmc) – multimedialny kombajn, zwłaszcza z pluginem umożliwiającym oglądanie wielu stacji telewizyjnych: http://sd-xbmc.org/repository/repository.sd-xbmc.org/repository.sd-xbmc.org-2.0.0.zip
+
+sudo add-apt-repository ppa:team-xbmc/ppa
+sudo apt update
+sudo apt install kodi
+
+
+
+ 
+
+26) Mkvmerge – do tworzenia i edycji plików MKV
+
+sudo apt install mkvtoolnix-gui
+
+
+
+ 
+
+27) VirtualBox darmowy program do odpalania wirtualnych maszyn, niezastąpiony do testów
+
+https://www.virtualbox.org/wiki/Linux_Downloads
+
+sudo dpkg -i virtualbox...
+
+
+
+ 
+
+28) Furious – graficzna nakładka dla komendy mount
+
+sudo apt install furiusisomount
+
+
+
+ 
+
+29) Dodatkowe kodeki i czcionki jeśli nie zaznaczyliśmy odpowiedniej opcji w trakcie instalacji
+
+sudo apt install ubuntu-restricted-extras
+
+ 
+
+30) Steam
+
+sudo apt install steam
+
+
+
+ 
+
+31) Gnotifier – bardzo sprytny dodatek do Firefox’a i (niestety wciąż niezaktualizowany dla Firefoxa) Thunderbird’a pozwalający na wyświetlanie (ładnych) powiadomień przy pomocy systemowych komunikatów.
+
+http://nocnypingwin.pl/integracja-firefoxa-z-systemowym-powiadamianiem/
+
+http://nocnypingwin.pl/gnotifier-rowniez-dla-thunderbirda/
+
+http://nocnypingwin.pl/powiadomienia-o-nowej-poczcie-gmail-w-ubuntu/
+
+ 
+
+32) Meld – graficzna program do porównywania zawartości dwóch plików, czasem może się przydać jeśli nie lubimy (a powinniśmy) diff’a 😉
+
+sudo apt install meld
+
+
+
+ 
+
+33) Otwarta Java (na niej Minecraft też działa)
+
+sudo apt install openjdk-8-jre
+
+lub
+
+sudo apt install openjdk-9-jre
+
+lub -jdk
+
+ 
+
+34) Skype – https://go.skype.com/skypeforlinux-64.deb
+
+ 
+
+sudo dpkg -i skypeforlinux-64.deb
+
+sudo apt install -f
+
+ 
+
+
+
+ 
+
+35) Teamviewer – wreszcie prawdziwie natywna wersja oparta o Qt
+
+https://download.teamviewer.com/download/linux/teamviewer_amd64.deb
+
+sudo dpkg -i teamviewer_amd64.deb
+
+sudo apt install -f
+
+ 
+
+
+
+ 
+
+Kilka drobiazgów na sam koniec:
+
+36) Na wypadek jakbyśmy chcieli usunąć niechciane PPA i przywrocić domyślne ustawienia:
+
+sudo apt install ppa-purge
+
+Użycie:  sudo ppa-purge xorg-edgers etc
+
+ 
+
+37) Restart gnome-shella łatwo dokonać poprzez skrót alt-f2 i wpisanie litery r
+
+ 
+
+38) Gnome ma sporo skrótów, z którymi warto się zaznajomić, jedne z ciekawszych to skróty zmieniające nam okna w kafelki, coś na wzór i3 itp: winlogo – strzałka góra/dół/lewo/prawo
