@@ -1,0 +1,199 @@
+Artykuł przedstawia instrukcję pobierania i instalacji serwera Linux Ubuntu w wersji Server w wersji 16. Opis dotyczy instalacji „czystego” systemu serwerowego, bez żadnych usług, zaś jedyną konfiguracją, jaka została przeprowadzona, to ustawienie statycznego adresu IP oraz konfiguracja dostępu zdalnego. Niniejszy wpis należy traktować jako wstęp do kolejnych instrukcji, które będą w przyszłości zamieszczane na tej stronie w przyszłości.
+
+Pobieranie systemu operacyjnego Ubuntu Server
+
+Obraz serwera należy pobrać ze strony http://www.ubuntu.com/download/server. Po pobraniu obrazu systemu należy zapisać obraz systemu na płycie DVD. W przypadku, gdy instalacja będzie się odbywać na hypervisorze, wystarczy podłączyć obraz .iso jako obraz startowy dla utworzonej maszyny wirtualnej.
+
+Instalacja
+
+Bezpośrednio po starcie instalatora, należy wybrać język systemu i zatwierdzić klawisze Enter.
+
+ 
+
+W kolejnym oknie należy wybrać opcję Zainstaluj Ubuntu Server.
+
+ 
+
+Być może pojawi się okno informujące o niekompletnym tłumaczeniu dla języka polskiego, jednak należy zignorować komunikat wybierając <TAK>, aby przejść do kolejnych opcji instalacji.
+
+ 
+
+W kolejnym oknie należy wybrać lokalizację, serwera lub usługi, dzięki czemu w instalowanym systemie zostaną ustawione niezbędne parametry regionalne.
+
+ 
+
+Konfiguracja klawiatury polega na wciśnięciu przycisku <NIE> i wyborze w kolejnym oknie polish. W kolejnym oknie również można wybrać Polish i przejść do kolejnego kroku.
+
+ 
+
+Na tym etapie instalator dokona rozpoznania sprzętu i pobierze niezbędne pakiety.
+
+ 
+
+W kolejnym etapie należy definiować nazwę serwera, np. lin01,lecz może być to dowolna nazwa (proszę nie stosować odstępów oraz polskich znaków).
+
+Kolejne okna to konfiguracja użytkownika w systemie. Dla bezpieczeństwa Linux nie pozwoli zalogować się na konto domyślnego administratora – root, lecz będzie możliwe podniesienie uprawnień z poziomu zwykłego użytkownika.
+
+ 
+
+Najlepiej podać pełne dane, tj. imię i nazwisko tworzonego użytkownika.
+
+ 
+
+W kolejnym oknie dotyczącym tworzenia konta użytkownika należy wpisać login, za pomocą którego będzie odbywać się logowanie do systemu. W moim przypadku to lklich.
+
+ 
+
+Ostatnim etapem konfiguracji konta użytkownika jest podanie i potwierdzenie nowego hasła. Proszę pamiętać, by stosować złożone hasła!
+
+ 
+
+Można także włączyć szyfrowanie katalogu domowego, jednak jeśli nie jest przewidziane przechowywanie na serwerze cennych plików, proponuję wybranie opcji <NIE>.
+
+Konfiguracja strefy czasowej najczęściej wymaga jedynie potwierdzenia przyciskiem <TAK>. Jeśli jednak instalator z jakiegoś powodu nie rozpozna strefy Europe/Warsaw, należy wybrać <NIE> i wybrać strefę czasową.
+
+ 
+
+Partycjonowanie dysku
+
+Temat partycjonowania dysku dla systemu Linux jest bardzo rozległy, jednak ze względu na prostotę niniejszego opisu, należy wykorzystać automatyczne partycjonowanie, które jest rozwiązaniem optymalnym dla wielu amatorskich zastosowań.
+
+ 
+
+Należy wybrać: Przewodnik – cały dysk i ustawienie LVM i przejść do wyboru dysku, który będzie partycjonowany:
+
+ 
+
+Jeśli jest jeden dysk, wystarczy wcisnąć Enter, jeśli jest dostępne więcej dysków, należy wybrać właściwy.
+
+ 
+
+Teraz należy wybrać opcję <TAK>, by instalator dokonał partycjonowania, jednak w kolejnym oknie instalator zapyta jaką powierzchnię przydzielić i należy po prostu zatwierdzić klawiszem Enter.
+
+ 
+
+W kolejnym oknie ukaże się podsumowanie partycjonowania, które należy zatwierdzić przyciskiem <TAK>. Rozpocznie się właściwe partycjonowanie dysku, po czym instalator przystąpi do instalacji podstawowego systemu.
+
+ 
+
+Może to potrwać kilka chwil. W przypadku, gdy instalator zapyta o serwer pośredniczący (proxy), można zatwierdzić klawiszem Enter, jeśli takiego serwera nie ma lub wpisać jego adres. Nastąpi pobieranie pakietów z Internetu.
+
+ 
+
+Końcowym etapem jest wybór sposobu aktualizowania systemu. Domyślnie instalator proponuje wyłączenie aktualizacji, lecz wówczas wymagane będzie „ręczne” aktualizowanie systemu. Lepszym sposobem jest jednak wybranie aktualizacji automatycznych w obrębie aktualizacji bezpieczeństwa (2), dzięki czemu, aktualizacje o dużym priorytecie dla zachowania bezpieczeństwa będą pobierane i aktualizowane automatycznie.
+
+Następnym etapem jest wybór pakietów serwera. Ze względu na podejście minimalizacji, należy oprócz domyślnie zaznaczonego pakietu standard system utilities, zaznaczyć jedynie OpenSSH server.
+
+ 
+
+Teraz nastąpi etap pobierania i instalowania pakietów przez instalator, co może chwilę potrwać.
+
+ 
+
+Na koniec instalator zapyta o instalację programu rozruchowego, który jest konieczny do uruchomienia systemu. Należy wybrać <TAK>, aby instalator zainstalował program rozruchowy w głównym rekordzie rozruchowym.
+
+Instalacja systemu Linux została zakończona i należy uruchomić ponownie system.
+
+Podstawowa konfiguracja systemu
+Przypisanie statycznego adresu IP
+
+Po zalogowaniu się do serwera, pierwszym etapem jest ustawienie stałego IP serwera, który podczas instalacji został skonfigurowany jako dynamiczny (dhcp).
+
+W systemie Linux karty sieciowe oznaczane są jako eth0, eth1, eth2, etc., gdzie 0, 1, 2, .., to numer kolejnych kart fizycznych w systemie.
+
+Aby odczytać adres IP, po zalogowaniu się do systemu za pomocą nazwy użytkownika i hasła, należy użyć polecenia: ifconfig<enter>.
+
+ 
+
+Aby odczytać dane dotyczące ustawień konkretnej karty sieciowej, polecenie można uzupełnić kartą sieciową, której konfiguracja ma być odczytana, np. ifconfig eth1 – odczyta konfigurację 2 karty sieciowej.
+
+Modyfikacja portu SSH dla połączeń przychodzących
+
+Konfiguracja interfejsów sieciowych w systemie Linux znajduje się w pliku interfaces.
+
+Kod źródłowy	
+/etc/network/interfaces
+Aby otworzyć do edycji plik konfiguracyjny interfejsów, należy wpisać:
+
+Kod źródłowy	
+sudo nano /etc/network/interfaces
+Zastosowanie komendy sudo oznacza, że kolejne komendy w wierszu muszą być wykonane z podwyższonymi uprawnieniami, dlatego po uruchomieniu komendy klawiszem Enter, system poprosi o podanie hasła (w tym przypadku jest ono takie samo, jak do logowania).
+
+Domyślna konfiguracja adresu dynamicznego wygląda tak:
+
+auto eth0
+iface eth0 inet dhcp
+Należy teraz zmodyfikować wpis następująco:
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto eth0
+iface eth0 inet static
+address 192.168.1.2
+netmask 255.255.255.0
+gateway 192.168.1.1
+dns-nameservers 194.204.159.1 194.204.152.34
+W przypadku nowo zainstalowanego serwera, należy dokonać konfiguracji w sekcji primary network interface, gdzie:
+
+auto (eth0) oznacza automatyczne włączenie karty sieciowej po starcie systemu,
+iface, to karta sieciowa – eth0 (pierwsza karta), eth1 (druga), etc.,
+address, to adres IP karty,
+netmask, to maska sieci,
+gateway to brama,
+dns-nameservers, to serwery nazw oddzielone spacją.
+Aby zapisać zmiany, należy użyć kombinacji Ctrl+O oraz zatwierdzić klawiszem Enter. Po zapisaniu, można opuścić edytor skrótem klawiaturowym Ctrl+X.
+
+Po zmianie pliku konfiguracyjnego, należy zrestartować usługę sieci za pomocą komendy:
+
+sudo /etc/init.d/networking restart
+zaś jeśli to nie przyniesie efektu, należy zrestartować serwer komendą sudo reboot. Po ponownym uruchomieniu serwer będzie posiadał przypisany na stałe adres IP.
+
+Dostęp zdalny do serwera poprzez SSH
+Niezależnie od tego, czy system Linux został zainstalowany na serwerze wirtualnym, czy  też fizycznym, złym pomysłem jest administrowanie nim za pomocą dołączonego monitora lub konsoli Hyper-V. O wiele lepszym i wygodniejszym rozwiązaniem jest zdalne łączenie się za pomocą konsoli putty. Dzięki temu, do serwera będzie można podłączać się zdalnie, z dowolnego miejsca i z dowolnego komputera.
+
+Standardowym portem usługi SSH (np. dla putty) jest port 22, jednakże ze względu na powszechność tej informacji, warto dla bezpieczeństwa zmienić numer portu na inny. Z pewnością spowoduje to zmniejszenie ilości prób nielegalnego dostępu ze strony osób postronnych oraz robotów, zaś plik logu będzie miał zdecydowanie mniejszy rozmiar.
+
+Aby zmienić domyślny port z 22 na np. 4322, należy otworzyć do edycji plik konfiguracyjny sshd.conf:
+
+sudo nano /etc/ssh/sshd_config
+Zmienić port nasłuchu z 22 na np. 4322 (wiersz Port), zapisać zmiany (Ctrl+O) i wyjść z edycji (Ctrl+X) i zrestartować ssh:
+
+sudo /etc/init.d/ssh restart
+Zakończenie
+
+Instalacja to jedynie początek, ponieważ nowo zainstalowany serwer nie zawiera żadnych usług. Od administratora zależy, w jakie usługi wyposaży nowo zainstalowany serwer, a możliwości w tym obszarze jest bardzo wiele. Oto usługi, które mogą zostać uruchomione i wdrożone na serwerach Linux:
+
+serwer plików,
+serwer Active Directory z obsługą GPO (Samba),
+serwer DNS,
+serwer wersjonowania dla programistów,
+serwer DHCP,
+serwer drukowania,
+serwer WWW,
+serwer poczty,
+serwer pracy zespołowej,
+serwer ftp,
+macierz iSCSI,
+serwer kopii zapasowych,
+serwer baz danych,
+serwer PROXY,
+firewall,
+host wirtualizacyjny.
+Krótkie wyjaśnienie:
+
+Manual package selection – wybieramy pakiety ręcznie. nie zaznaczaj tego, chyba, że wiesz co robisz.
+DNS Server – instalacja serwera DNS, instalujemy, gdy chcemy trzymać konfigurację domeny na naszym VPS-ie. Jeśli nie jest ci potrzebne – nie instaluj.
+LAMP Server – instaluje pakiet Apache (serwer WWW) + MySQL + PHP 7. Jeśli będziesz uruchamiał stronę internetową – zaznacz.
+Mail Server – serwer poczty. Instaluj, gdy chcesz uruchomić własnego e-maila.
+PostgreSQL database – instaluje bazę PostgreSQL. Instaluj, jeśli będzie ci potrzebna.
+Samba file server – instaluje narzędzia do używania w sieciach SMB w systemie Microsoft Windows.
+standard system utilities – instaluje narzędzia systemowe. Nie odznaczaj tego, bo z VPS-a nie będzie dało się korzystać.
+Virtual Machine Host – instaluje narzędzia potrzebne do tworzenia VPS-ów na własnym VPS-ie. Najlepiej instalować gdy posiadamy dedyka 32 GB RAM albo VPS 16 GB.
+OpenSSH Server – instaluje serwer SSH, po to by móc łączyć się z serwerem przez programy takie jak PuTTY lub WinSCP. Zaznacz tą opcję – chyba że wolisz zarządzać serwerem przez konsolę.
+Warte podkreślenia jest to, że wymienione usługi, które może obsługiwać serwer oparty na systemie Linux są dostępne bezpłatnie – także do użytku komercyjnego. Nie ma więc żadnych ograniczeń licencyjnych, które można znaleźć w przypadku oprogramowania komercyjnego. Niestety wadą jest niełatwa konfiguracja systemu. Jeśli w przypadku systemu Windows Server, konfigurację można po prostu „wyklikać”, to w przypadku serwera Linux, niezbędna jest wiedza na temat środowiska i często konieczność poznawania zawiłych plików konfiguracyjnych, których jest niemało.
+
+ 
+
