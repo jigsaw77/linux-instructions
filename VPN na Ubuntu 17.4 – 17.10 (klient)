@@ -1,0 +1,17 @@
+W sieci mamy wysyp firm oferujących usługę tunelowania naszego dostępu do internetu jednak dla użytkownika systemu linux problemem może być znalezienie usługodawcy który udostępnia darmowo klienta VPN.
+Jest jednak firma która ma w swojej ofercie klienta na systemy linux-owe który działa choć jest jeszcze w fazie beta. Jak zawsze w przypadku darmowych usług także windsribe narzuca klientowi limit (10GB) transferu miesięcznie pod warunkiem potwierdzenia podanego wcześniej adresu email . Klient windscribe działa obecnie tylko w terminalu co niektórzy mogą nazwać zaletą programu.
+Instalacja windscribe:
+1. Logujemy się w terminalu jako root i dodajemy klucz :
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key FDC247B7
+2. Dodajemy repozytorium windscribe do listy:
+echo 'deb https://repo.windscribe.com/ubuntu zesty main' | sudo tee /etc/apt/sources.list.d/windscribe-repo.list
+3. Uruchamiamy apt-get update
+sudo apt-get update
+4. Instalujemy windscribe-cli
+sudo apt-get install windscribe-cli
+5. Logujemy się to Windscribe (najpierw trzeba założyć konto na stronie https://windscribe.com/signup i zaznaczyć darmowe konto )
+windscribe login
+6. łączymy się z VPN Windscribe
+windscribe connect
+7. Pozostałe komendy są widoczne po wpisaniu:
+windscribe --help
