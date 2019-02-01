@@ -1,0 +1,27 @@
+Wśród początkujących użytkowników Ubuntu aktualizacja systemu za pomocą terminala, uważana jest za coś skomplikowanego i niebezpiecznego. Nowym linuksiarzom brakuje odwagi na takie działanie z kilku powodów np. niewielka lub zerowa wiedza na temat linii poleceń, konieczność używania komend zamiast klikania, obawa przed „posypaniem się” całego systemu. Gdy już ktoś przekona się do aktualizacji systemu za pomocą linii poleceń, pojawia się pytanie – używać apt-get upgrade czy apt-get dist-upgrade?
+
+W poniższym artykule postaram się odpowiedzieć na to pytanie i rozwiać kilka wątpliwości związanych z aktualizacją systemu w terminalu. Oczywiście ostateczna decyzja należy do Ciebie.
+
+Różnice
+Na początek porównamy dwie opcje apt-get:
+
+upgrade,
+dist-upgrade.
+Zanim opiszę te polecenia bardziej szczegółowo chcę, abyś zrozumiał termin aktualizacja systemu, który wykorzystuję (trochę nieszczęśliwe) do opisu dwóch czynności:
+
+aktualizacji aktualnie zainstalowanych pakietów w obecnej wersji systemu (i tego dotyczą poniższe polecenia!),
+aktualizacji samego wydania Ubuntu np. z 10.10 do 11.04 – taką możliwość posiada dodatkowo dist-upgrade, ale po spełnieniu określonych warunków, co wyjaśnię poniżej.
+apt-get upgrade
+Polecenie upgrade służy do instalacji najnowszych wersji pakietów już zainstalowanych na komputerze. Dokładnie to samo dokonuje się, gdy aktualizujesz system za pomocą Menedżera aktualizacji – zostajesz o tym poinformowany za pomocą powiadomień w prawym górnym rogu ekranu.
+
+apt-get dist-upgrade
+Ta opcja nieco różni się od klasycznego upgrade – można powiedzieć, że jest bardziej rozbudowana. Poza instalacją najnowszych wersji pakietów zajmuje się również zależnościami (relacjami między pakietami zainstalowanymi w systemie). Usuwa przestarzałe pakiety, które nie są już potrzebne – sam upgrade tego nie robi. Funkcja ta jest konieczna podczas aktualizacji Ubuntu do nowszej wersji np. z 10.04 do 10.10, aby uniknąć „wymieszania” pakietów. Jednak aktualizacja wydania Ubuntu nie dokona się sama, jeśli w pliku /etc/apt/sources.list nie umieścisz repozytoriów do nowszej wersji systemu, dlatego możesz spokojnie tym poleceniem aktualizować bieżącą wersję systemu (zainstalowane pakiety).
+
+Aktualizacja wydania Ubuntu
+W celu aktualizacji wydania Ubuntu zostało przygotowane specjalne polecenie:
+
+sudo do-release-upgrade
+Które wyszukuje najnowsze wydanie Ubuntu i dokonuje aktualizacji.
+Polecenie sprawdzające, czy dostępne jest nowe wydanie:
+
+sudo do-release-upgrade -d
