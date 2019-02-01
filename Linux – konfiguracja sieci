@@ -1,0 +1,88 @@
+Konfiguracja sieci
+W systemie Linuks sieć jest w podstawowym zakresie konfigurowana już podczas instalacji. Wszystkie dane konfiguracyjne są przechowywane w katalogu /etc/ i jego podkatalogach.
+Dużą dogodnością jest fakt, że Linuks, podobnie jak inne systemy Unixowe może być konfigurowany w czasie pracy, bez konieczności restartowania systemu, co znacznie upraszcza eksperymentowanie i poprawianie problemów konfiguracyjnych.
+
+Najważniejsze pliki konfiguracyjne odpowiadające za działanie sieci to :
+
+/etc/sysconfig/network
+/etc/HOSTNAME
+/etc/hosts
+/etc/services
+/etc/host.conf
+/etc/resolv.conf
+ 
+
+/etc/sysconfig/network
+
+Plik network zawiera podstawowe informacje o konfiguracji sieci, takie jak :
+
+NETWORKING
+HOSTNAME
+DOMAINNAME
+GATEWAY
+GATEWAYDEV	<YES> jeśli nasz host pracuje w sieci lub <NO> jeśli nie
+<nazwa hosta>
+<nazwa domeny>
+<adres bramy sieciowej>
+<nazwa urządzenia, które obsługuje bramę sieciową>
+ 
+
+/etc/HOSTNAME/
+
+Plik ten powinien zawierać tylko jeden wpis, określający główną nazwę naszego hosta .
+
+ 
+
+/etc/hosts
+
+Plik hosts zawiera odwzorowania adresów IP na nazwy komputerów, jak również aliasy tych nazw.
+W praktyce plik ten wykorzystywany jest tylko wtedy, gdy nasza sieć nie posiada własnego serwera nazw (DNS).
+
+Każdy wiersz tego pliku powinien składać się z następujących rekordów :
+
+IP nazwa_hosta
+np.:
+192.168.1.12 stacja1
+
+ 
+
+/etc/services
+
+Plik services zawiera odwzorowania nazw usług sieciowych na numery portów wykorzystywanych przez komputer do obsługi danej usługi. Plik ten składa się z wierszy, z których każdy jest jednym rekordem informacji.
+
+Każdy rekord składa się z trzech pól :
+
+nazwa port/protokół aliasy # komentarz
+np.:
+www     80/tcp      http    # WWW
+
+gdzie :
+
+nazwa – oznacza słowo reprezentujące opisywaną usługę
+port – jest numerem określający numer portu, pod którym będzie dostępna dana usługa
+protokół – nazwa protokołu TCP lub UDP
+aliasy – określają inne nazwy, pod którymi będzie dostępna usługa
+
+ 
+
+/etc/host.conf
+
+Plik host.conf zawiera dane o kolejności, w jakiej system powinien odpytywać różne systemy tłumaczeń nazw (DNS, NIS) przy rozwiązywaniu nazwy sieciowej.
+
+Plik ten może składać się z następujących dyrektyw :
+
+order – określa kolejność przepytywania systemów tłumaczeń nazw i może składać się z następujących opcji :
+bind (DNS), hosts ( /etc/hosts), nis (NIS)
+multi – określa, czy zapytanie kierowane do systemu rozwiązywania nazw zwraca tylko jeden wynik – off, czy może zwrócić ich kilka – on
+
+ 
+
+/etc/resolv.conf
+
+Plik resolv.conf jest plikiem konfiguracyjnym klienta DNS. Określa on kolejność przeszukiwania domen i zawiera adresy serwerów nazw.
+
+Najczęściej przy konfiguracji tego pliku stosuje się trzy słowa kluczowe :
+
+nameserver – określa adres serwera DNS
+domain – określa nazwę domeny, do której należy komputer
+search – określa kolejność przeszukiwania domen
