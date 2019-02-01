@@ -1,0 +1,177 @@
+Struktura katalogów w dystrybucjach Linuksa jest zorganizowana tak, aby spełniała wymagania standardu określającego postać Linuksowego systemu plików.
+Katalogi zorganizowane są w następujący sposób :
+/            – główny katalog
+|_ bin    – pliki wykonywalne
+|_ boot  – pliki ładujące system
+|_ dev    – pliki urządzeń
+|_ etc     – pliki konfiguracyjne
+|_ lib      – biblioteki dzielone i moduły jądra
+|_ mnt    – punkt montowania systemów plików
+|_ opt     – pakiety zainstalowane opcjonalnie
+|_ sbin    – pliki wykonywalne (dla administratorów)
+|_ tmp    – pliki tymczasowe
+|_ usr     – narzędzia i aplikacje
+|_ var    – zmieniające się dane
+
+ 
+
+Opis zawartości poszczególnych katalogów :
+/
+Katalog nadrzędny, który rozpoczyna całe drzewo katalogów.
+
+/bin
+Katalog ten zawiera programy wykonywalne, dostępne dla zwykłego użytkownika.
+
+/boot
+Katalog ten zawiera tylko statyczne pliki dla boot loadera potrzebne podczas procesu bootowania.
+
+/dev
+Tu znajdują się pliki reprezentujące poszczególne urządzenia.
+
+/etc
+Zawiera ogólnosystemowe pliki konfiguracyjne dla wielu programów.
+Pliki konfiguracyjne dla całego systemu można również umieszczać w /usr/etc.
+Niemniej jednak programy powinny zawsze szukać tych plików w /etc , a ty możesz umieścić linki do nich w /usr/etc.
+
+/home
+Tu znajdują się katalogi domowe użytkowników.
+
+/lib
+Ten katalog powinien zawierać te biblioteki dynamiczne, które są konieczne do wystartowania systemu i uruchamiania komend z głównego systemu plików.
+
+/lib/modules
+Ładowalne moduły jądra, wymagane do startu systemu i pracy po jego padzie (sterowniki sieciowe, itd. ).
+
+/mnt
+Jest punktem montowania systemów plików montowanych tymczasowo.
+
+/opt
+Ten katalog powinien zawierać dodatkowe pakiety, które zawierają statyczne pliki.
+
+/proc
+System plików /proc jest całkowicie wirtualny – nie istnieje na dysku. Jest tworzony i utrzymywany przez jądro w pamięci. Używany jest w celu dostarczenia informacji o systemie (o działających procesach – stąd nazwa).
+
+/root
+Tan katalog jest katalogiem domowym użytkownika root.
+
+/sbin
+Tak jak /bin, katalog ten zawiera programy potrzebne do wystartowania i administracji systemu. Z programów tych mogą korzystać tylko administratorzy systemu.
+
+/tmp
+Ten katalog zawiera pliki tymczasowe, które może usunąć w dowolnym momencie.
+
+/usr
+W katalogu tym znajdują się programy zainstalowane podczas instalacji systemu lub te, które instalowaliśmy ręcznie. Katalog ten można zamontować na oddzielnej partycji, dzięki czemu po aktualizacji lub zmianie systemu nie musimy ponownie instalować dodatkowych programów.
+
+/usr/bin
+Jest to główny katalog programów wykonywalnych, używanych przez zwykłych użytkowników, które nie są potrzebne przy starcie lub naprawie systemu, i które nie są instalowane lokalnie.
+
+/usr/etc
+Można tu umieszczać pliki konfiguracyjne dzielone między kilkoma maszynami. Programy jednak powinny zawsze odwoływać się do tych plików używając katalogu /etc.
+Linki od plików w /etc powinny wskazywać na odpowiednie pliki w /usr/etc.
+
+/usr/lib
+Znajdują się tu biblioteki obiektowe, w tym dynamiczne, plus parę plików wykonywalnych.
+
+/usr/local
+Katalog ten jest przeznaczony dla programów instalowanych lokalnie.
+
+/usr/local/bin
+Tu są binaria programów lokalnych.
+
+/usr/local/doc
+Lokalna dokumentacja.
+
+/usr/local/etc
+Pliki konfiguracyjne skojarzone z lokalnie zainstalowanymi programami.
+
+/usr/local/lib
+Pliki skojarzone z lokalnie zainstalowanymi programami.
+
+/usr/local/include
+Pliki nagłówkowe lokalnego kompilatora C.
+
+/usr/local/info
+Strony info skojarzone z lokalnie zainstalowanymi programami.
+
+/usr/local/man
+Strony podręcznika ekranowego skojarzone z lokalnie zainstalowanymi programami.
+
+/usr/local/sbin
+Lokalnie instalowane programy do administracji systemem.
+
+/usr/local/share 
+Dane lokalnych aplikacji, które mogą być dzielone między różnymi architekturami tego samego systemu operacyjnego.
+
+/usr/local/src
+Kody źródłowe programów instalowanych lokalnie.
+
+/usr/sbin
+Ten katalog zawiera binaria programów do administracji systemem, które nie są niezbędne do startu lub naprawy systemu.
+
+/usr/share
+Ten katalog zawiera podkatalogi ze specyficznymi danymi aplikacji, które mogą być dzielone między różnymi architekturami tego samego systemu operacyjnego.
+
+/usr/share/doc
+Dokumentacja zainstalowanych programów.
+
+/usr/share/info 
+Katalog ze stronami info.
+
+/usr/share/locale
+Tutaj znajdują się informacje związane z ustawieniami regionalnymi.
+
+/usr/share/man 
+Trafiają tu strony podręcznika ekranowego do odpowiednich katalogów według sekcji podręcznika.
+
+/usr/share/zoneinfo
+Pliki informacji o strefach czasowych.
+
+/usr/src 
+Pliki źródłowe różnych części systemu, dołączane do niektórych pakietów.
+
+/usr/src/linux
+Zawiera źródła jądra samego systemu operacyjnego.
+
+/var 
+Ten katalog zawiera pliki, które mogą zmieniać wielkość, takie jak logi i spoole.
+
+/var/cache
+Zbuforowane dane programów.
+
+/var/lib 
+Zmieniające się podczas pracy systemu pliki programów.
+
+/var/local
+Zmienne dane dla programów zainstalowanych w /usr/local.
+
+/var/lock
+Umieszczane są tu przez programy pliki blokady w celu wskazania na swoje działanie. Inne programy sprawdzają te pliki i odpowiednio działają (np.: wstrzymują się z odwołaniem do danego urządzenia).
+Konwencja nazw plików lock dla urządzeń to LCK.<urządzenie> gdzie <urządzenie>, to nazwa urządzenia w systemie plików.
+
+/var/log
+Tu znajdują się logi systemowe i innych programów.
+
+/var/opt
+Zmienne dane dla /opt.
+
+/var/mail
+Skrzynki pocztowe użytkowników. Zastępuje /var/spool/mail.
+
+/var/run
+Pliki zawierające bieżące informacje o systemie, np.: pliki zawierające identyfikatory procesów (PIDy) i informację o zalogowanych użytkownikach (utmp). Pliki w tym katalogu są zwykle czyszczone przy starcie systemu.
+
+/var/spool
+Kolejkowane pliki różnych programów.
+
+/var/spool/at
+Spoolowane zadania dla at
+
+/var/spool/cron
+Spoolowane zadania dla crona.
+
+/var/spool/lpd
+Spoolowane pliki do drukowania.
+
+/var/tmp
+Tak jak /tmp, ten katalog zawiera tymczasowe pliki przechowywane na czas nieokreślony.
