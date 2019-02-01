@@ -1,0 +1,143 @@
+Automatyczne montowanie partycji NTFS
+Wiele osób (spośród posiadaczy Ubuntu) jest równocześnie użytkownikiem Windowsa. Zdarza się, że dla zaoszczędzenia miejsca posiadają wydzielone partycje NTFS, na których magazynują takie dane jak muzyka, zdjęcia. System Ubuntu gwarantuje do nich dostęp, jednak standardowo taka partycja nie jest automatycznie montowana i przed wejściem na nią trzeba podać hasło. W tym artykule zaprezentuję sposób na automatyczne montowanie partycji od razu po starcie systemu.
+
+Na początek zainstaluj pakiet, dzięki któremu Twój system będzie mógł obsługiwać partycje NTFS:
+
+sudo apt-get install ntfs-3g
+Teraz musisz sprawdzić jaki „numerek” przypisał system dyskom, które chcesz zamontować. Otwórz terminal i wydaj polecenie:
+
+sudo fdisk -l
+To polecenie wyświetli wszystkie wykrywane przez system partycje. Powinna zainteresować Cię ta część:
+
+Device Boot      Start         End      Blocks   Id  System
+/dev/sda1   *           1         898     7213153+   7  HPFS/NTFS
+/dev/sda2             899       19456   149067135    f  W95 Ext'd (LBA)
+/dev/sda5            8188       19456    90518211    7  HPFS/NTFS
+/dev/sda6             899        1022      995967   82  Linux swap / Solaris
+/dev/sda7            1023        8187    57552831   83  Linux
+Łatwo z niej wywnioskować, że partycje NTFS posiadają oznaczenie sda1 i sda5 – oczywiście w Twoim przypadku mogą być to zupełnie inne oznaczenia.
+
+Nie zamykając terminalu wydaj polecenie:
+
+sudo ls -l /dev/disk/by-uuid/
+Tym razem powinieneś zainteresować się tym:
+
+lrwxrwxrwx 1 root root 10 2008-08-08 09:51 343e5ec1-99ed-4682-a6cb-5aa6a8e1f44a -> ../../sda7
+lrwxrwxrwx 1 root root 10 2008-08-08 09:51 92701CA6701C9359 -> ../../sda5
+lrwxrwxrwx 1 root root 10 2008-08-08 09:51 A080692280690060 -> ../../sda1
+lrwxrwxrwx 1 root root 10 2008-08-08 09:51 bb2b23d0-b133-4ca7-b0cb-fc8aa44b32f7 -> ../../sda6
+Odszukaj na liście partycje, które chcesz zamontować (w MOIM przypadku sda5 i sda1) i zapisz sobie ich UUID (specjalnie je pogrubiłem)
+
+Aby poprawnie zamontować partycję musisz utworzyć katalog, do którego dana partycja będzie montowana. Aby to zrobić wydaj w terminalu polecenie:
+
+sudo mkdir /media/nazwa_katalogu
+Polecam tworzenie katalogów o nazwie odpowiadającej oznaczeniu naszego dysku, czyli dla sda1 będzie to:
+
+sudo mkdir /media/sda1
+a dla sda5:
+
+sudo mkdir /media/sda5
+Podana ścieżka będzie ważna w dalszej części poradnika! Zapamiętaj ją!
+
+Teraz będzie z górki, jednak nadal musisz być ostrożny. Czas na edycję pliku fstab, aby to zrobić wpisz:
+
+sudo gedit /etc/fstab
+Zobaczysz coś takiego:
+
+# /etc/fstab: static file system information.
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+proc            /proc           proc    defaults        0       0
+# /dev/sda7
+UUID=343e5ec1-99ed-4682-a6cb-5aa6a8e1f44a /               ext3    relatime,errors=remount-ro 0       1
+# /dev/sda6
+UUID=bb2b23d0-b133-4ca7-b0cb-fc8aa44b32f7 none            swap    sw              0       0
+/dev/sda5    /media/sda5    ntfs    rw,nosuid,nodev,noatime,user_id=0,group_id=0,allow_other,auto    0    1
+/dev/sda1    /media/sda1    ntfs    rw,nosuid,nodev,noatime,user_id=0,group_id=0,allow_other,auto    0    1
+/dev/scd0       /media/cdrom0   udf,iso9660 user,noauto,exec,utf8 0       0
+/dev/fd0        /media/floppy0  auto    rw,user,noauto,exec,utf8 0       0
+Odszukaj partycje które chcesz zamontować i je usuń (Ctrl + X) – cały wpis, tak jak zaznaczyłem. Nie zamykaj pliku!
+
+Teraz uzupełnij odpowiednio poniższy przykład:
+
+#/dev/oznaczenie_partycji
+UUID=uuid_partycji /media/nazwa_katalogu ntfs defaults,utf8,umask=007,gid=46 0 0
+Pogrubione miejsca musisz odpowiednio uzupełnić. I tak, dla partycji sda1 będzie to wyglądać nasŧępująco:
+
+#/dev/sda1
+UUID=A080692280690060 /media/sda1 ntfs defaults,utf8,umask=007,gid=46 0 0
+0 na końcu zonacza, że nie chcę, aby dostęp do partycji był zabezpieczony hasłem – aby zabezpieczyć ustaw 1
+
+A dla sda5:
+
+#/dev/sda5
+UUID=92701CA6701C9359 /media/sda5 ntfs defaults,utf8,umask=007,gid=46 0 0
+Ostatecznie uzyskaliśmy takie dwa wpisy:
+
+#/dev/sda1
+UUID=A080692280690060 /media/sda1 ntfs defaults,utf8,umask=007,gid=46 0 0
+#/dev/sda5
+UUID=92701CA6701C9359 /media/sda5 ntfs defaults,utf8,umask=007,gid=46 0 0
+Musisz je teraz umieścić w pliku fstab. Przejdź do okna edycji tego pliku i dodaj te wpisy na końcu. Ostatecznie Twój plik fstab powinien wyglądać podobnie do tego:
+
+# /etc/fstab: static file system information.
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+proc            /proc           proc    defaults        0       0
+# /dev/sda7
+UUID=343e5ec1-99ed-4682-a6cb-5aa6a8e1f44a /               ext3    relatime,errors=remount-ro 0       1
+# /dev/sda6
+UUID=bb2b23d0-b133-4ca7-b0cb-fc8aa44b32f7 none            swap    sw              0       0
+/dev/scd0       /media/cdrom0   udf,iso9660 user,noauto,exec,utf8 0       0
+/dev/fd0        /media/floppy0  auto    rw,user,noauto,exec,utf8 0       0
+#/dev/sda5
+UUID=92701CA6701C9359 /media/Pliki ntfs defaults,utf8,umask=007,gid=46 0 0
+#/dev/sda1
+UUID=A080692280690060  /media/System ntfs defaults,utf8,umask=007,gid=46 0 0
+Zapisz plik (Ctrl + S) i uruchom ponownie komputer. Po restarcie na pulpicie powinny pokazać się zamontowane ikony partycji, do których teraz masz swobodny dostęp.
+
+Co robić jeśli powyższy sposób nie pomógł?
+
+1. Na początek spróbuj zamontować partycję ręcznie:
+
+sudo mount -t ntfs-3g /dev/sdaX /media/sdaX
+gdzie sdaX to numer partycji, a /media/sdaX to katalog w którym chcesz zamontować partycję.
+
+2. Jeśli dostałeś podobną informację do tej:
+
+$LogFile indicates unclean shutdown (0, 0) Failed to mount '/dev/sdaX': Operation not supported Mount is denied because NTFS is marked to be in use. Choose one action:
+
+Choice 1: If you have Windows then disconnect the external devices by
+clicking on the 'Safely Remove Hardware' icon in the Windows
+taskbar then shutdown Windows cleanly.
+
+Choice 2: If you don't have Windows then you can use the 'force' option for
+your own responsibility. For example type on the command line:
+
+mount -t ntfs-3g /dev/sdaX /media/sdaX -o force
+
+Or add the option to the relevant row in the /etc/fstab file:
+
+/dev/sdaX /media/sdaX ntfs-3g force 0 0
+Wydaj w terminalu polecenie:
+
+sudo mount -t ntfs-3g /dev/sdaX /media/sdaX -o force
+I sprawdź czy partycja została zamontowana.
+
+3. Teraz dodaj do /etc/fstab wpis, który będzie automatycznie montował partycję przy starcie systemu:
+
+sudo gedit /etc/fstab
+i dodaj wpis:
+
+/dev/sdaX /media/sdaX ntfs-3g force 0 0
+gdzie /dev/sdaX to numer partycji, a /media/sdaX to katalog, w którym będzie montowana partycja. Zapisz plik (Ctrl + S) i uruchom ponownie komputer, aby zobaczyć rezultaty.
+
+Partycja się montuje, jednak nie masz prawa zapisu?
+
+1. Otwórz terminal i zainstaluj dwa pakiety:
+
+sudo apt-get install ntfs-3g ntfs-config
+2. Po zakończonej instalacji wydaj polecenie:
+
+gksu ntfs-config
+3. W oknie, które Ci się pojawi zaznacz obie opcje i zapisz zmiany. Uruchom ponownie komputer.
