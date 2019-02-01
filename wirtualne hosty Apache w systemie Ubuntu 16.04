@@ -1,0 +1,107 @@
+Serwer WWW Apache jest najpopularniejszym sposobem udostępniania treści internetowych w Internecie. Stanowi on ponad połowę wszystkich aktywnych stron internetowych i jest niezwykle wydajny i elastyczny.
+
+Apache dzieli swoją funkcjonalność i komponenty na poszczególne jednostki, które można indywidualnie dostosować i skonfigurować. Podstawowa jednostka, która opisuje pojedynczą witrynę lub domenę, nazywa się virtual host.
+
+Te oznaczenia umożliwiają administratorowi korzystanie z jednego serwera do obsługi wielu domen na jednym adresie IP przy użyciu mechanizmu dopasowującego. Jest to istotne dla każdego, kto chce zamieścić więcej niż jedną witrynę na jednym VPS.
+
+Każda skonfigurowana domena kieruje użytkownika do określonego katalogu zawierającego informacje tej witryny, nie wskazując, że ten sam serwer jest odpowiedzialny również za inne witryny. Ten schemat można rozszerzyć bez żadnego limitu oprogramowania, o ile twój serwer może obsłużyć obciążenie.
+
+W tym przewodniku pokażemy, jak skonfigurować wirtualne hosty Apache na systemie Ubuntu 16.04 VPS. Podczas tego procesu dowiesz się, jak wyświetlać różne treści różnym użytkownikom w zależności od żądanych domen.
+
+Wymagania wstępne
+Przed rozpoczęciem tego samouczka powinieneś utworzyć użytkownika innego niż root, jak opisano w krokach 1-4 tutaj.
+
+Konieczne będzie również zainstalowanie Apache w celu wykonania tych kroków. Jeśli jeszcze tego nie zrobiłeś, możesz zainstalować Apache na swoim serwerze poprzez apt-get:
+
+sudo apt-get update
+sudo apt-get install apache2
+Po wykonaniu tych kroków możemy rozpocząć.
+
+Na potrzeby tego przewodnika nasza konfiguracja będzie wirtualnym hostem dla moja.domena.pl dla innego test.com. Zostaną one przywołane w całym przewodniku, ale powinieneś je zastąpić własnymi domenami.
+
+Krok pierwszy – Utwórz strukturę katalogów
+Pierwszym krokiem, jaki podejmiemy, jest utworzenie struktury katalogów, która będzie przechowywać dane o witrynie.
+
+Nasz katalog najwyższego poziomu, w którym Apache szuka, aby znaleźć treść do wyświetlenia zostanie ustawiony na poszczególne katalogi w /var/www. Stworzymy tutaj katalogi dla obu wirtualnych hostów, które planujemy.
+
+W każdym z tych katalogów utworzymy folder public_html, w którym przechowywane będą nasze pliki stron.
+
+Dla naszych witryn zamierzamy utworzyć katalogi w następujący sposób:
+
+sudo mkdir -p /var/www/moja.domena.pl/public_html
+sudo mkdir -p /var/www/test.com/public_html
+ 
+
+Krok drugi – Przyznaj uprawnienia
+Teraz mamy strukturę katalogów dla naszych plików, ale są one własnością naszego użytkownika root. Jeśli chcemy, aby zwykły użytkownik mógł modyfikować pliki w naszych katalogach internetowych, musimy zmienić uprawnienia:
+
+sudo chown -R $USER:$USER /var/www/moja.domena.pl/public_html
+sudo chown -R $USER:$USER /var/www/test.com/public_html
+
+$USER – to zmienna określająca naszego użytkownika musisz wpisać własną.
+
+Powinniśmy również nieco zmodyfikować nasze uprawnienia, aby zapewnić, że dostęp do odczytu jest dozwolony w ogólnym katalogu internetowym oraz wszystkich zawartych w nim plikach i folderach, aby strony mogły być wyświetlane poprawnie:
+
+sudo chmod -R 755 /var/www
+Twój serwer internetowy powinien mieć teraz uprawnienia potrzebne do wyświetlania treści, a Twój użytkownik powinien mieć możliwość tworzenia treści w odpowiednich folderach.
+
+Krok trzeci – Utwórz lub przenieś strony  dla każdego wirtualnego hosta
+Posiadamy strukturę katalogów. Możemy już przenieść pliki naszej strony przez ftp.
+
+ 
+
+Krok czwarty – Utwórz pliki wirtualnego hosta
+Pliki wirtualnego hosta to pliki, które określają faktyczną konfigurację naszych hostów wirtualnych i określają, w jaki sposób serwer WWW Apache będzie odpowiadał na różne żądania domeny.
+
+Apache ma domyślny plik wirtualnego hosta,( 000-default.conf ) który możemy wykorzystać jako punkt wyjścia. Należy skopiować go, aby utworzyć wirtualny plik hosta dla każdej z naszych domen.
+
+Utwórz pierwszy plik wirtualnego hosta
+Rozpocznij od skopiowania pliku dla pierwszej domeny:
+
+sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/moja.domena.pl.conf
+Otwórz nowy plik w edytorze z uprawnieniami roota:
+
+sudo nano /etc/apache2/sites-available/example.com.conf
+Plik będzie wyglądać mniej więcej tak (usunąłem tu komentarze, aby plik był bardziej dostępny):
+
+/etc/apache2/sites-available/example.com.conf
+
+<VirtualHost *:80>
+ ServerAdmin webmaster@localhost
+ DocumentRoot /var/www/html/
+ ErrorLog ${APACHE_LOG_DIR}/error.log
+ CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+Jak widać, nie ma tu zbyt wiele. Spersonalizujemy tutaj elementy dla naszej pierwszej domeny i dodamy kilka dodatkowych dyrektyw. Ta sekcja wirtualnego hosta pasuje do wszystkich żądań, które są wykonywane na porcie 80, domyślnym porcie HTTP.
+
+W sumie nasz plik virtualhost powinien wyglądać tak:
+
+/etc/apache2/sites-available/moja.domena.pl.conf
+<VirtualHost *:80>
+ ServerAdmin admin@moja.domena.pl
+ ServerName moja.domena.pl
+ ServerAlias www.moja.domena.pl
+ DocumentRoot /var/www/moja.domena.pl/public_html/
+ ErrorLog ${APACHE_LOG_DIR}/error.log
+ CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+Zapisz i zamknij plik.
+
+ 
+
+Krok piąty – Włącz nowe pliki hosta wirtualnego
+Po utworzeniu plików hostów wirtualnych musimy je włączyć. Apache zawiera kilka narzędzi, które pozwalają nam to zrobić.
+
+Możemy użyć  a2ensite, aby włączyć każdą z naszych stron w następujący sposób:
+
+sudo a2ensite moja.domena.pl.conf
+Następnie wyłącz domyślną witrynę zdefiniowaną w 000-default.conf:
+
+sudo a2dissite 000-default.conf
+Kiedy skończysz, musisz ponownie uruchomić Apache, aby wprowadzić te zmiany:
+
+sudo systemctl restart apache2
+lub tym poleceniem:
+
+sudo service apache2 restart
+To wszystko, sprawdź czy twoja witryna wyświetla się teraz prawidłowo.
