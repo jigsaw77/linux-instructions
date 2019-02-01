@@ -1,0 +1,33 @@
+Ubuntu w wersji 17.10 automatycznie montuje wszystkie dodatkowe dyski ( USB i HDD) w katalogu :
+/media
+System identyfikuje montowanie po UUID
+
+dla przykładu :
+
+/media/user/19f14480-a512-4301-8598-994149037418
+Jest to dość skomplikowana metoda montowania i w przypadku większej liczby auto montowanych urządzeń może sprawić użytkownikowi nieco problemów z identyfikacją.
+
+Aby uprościć widok naszych dysków skorzystamy z narzędzia wbudowanego w ubuntu 17.10 ( program “dyski”)
+
+
+
+zaznacz dysk w którym chcesz zmienić punkt montowania, naciśnij zębatkę i wybierz modyfikuj opcje montowania:
+
+
+
+interesują nas 2 opcje
+
+“punkt montowania”
+
+/mnt/sde1
+oraz “identyfikowanie jako” zmień na formę:
+
+/dev/sde1
+Dzieki tym zmianom nasz dodatkowy dysk będzie dostępny w katalogu:
+
+/mnt/sde1
+
+
+Teraz potrzebujemy nadać prawa zapisu i odczytu naszemu użytkownikowi (domyślnie prawa zapisu ma tylko root)
+
+sudo chown -R user /mnt/sde1
