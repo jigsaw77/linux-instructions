@@ -1,0 +1,160 @@
+Migracja WordPressa – uniwersalna.
+Nie zawsze migracja przy użyciu wtyczki do wordpress-a daje radę dlatego poniżej zamieszczam sposób uniwersalny na przeniesienie strony.
+
+ 
+
+1. Wyeksportuj Bazę Danych
+Zaloguj się do phpMyAdmin’a, menu po lewej stronie wybierz bazę danych, która odpowiedzialna jest za WordPressa.
+
+
+
+Następnie w górnym menu wybierz „Eksport”. Zostaniesz przeniesiony do zakładki, która pozwala zapisać kopię bazy danych. Zaznacz pole „Dostosuj” i w sekcji „Wyjście” zaznacz pole „Zapisz wynik do pliku”. Wybierz także kompresję .ZIP lub .GZIP.
+
+
+
+Potwierdź wykonanie kopii zapasowej przyciskiem „Wykonaj” u dołu ekranu. Baza danych zostanie zapisana na dysku w formacie .ZIP lub .GZIP.
+
+Krok 2: Zaimportuj bazę danych w swoim hostingu (lub VPS)
+Zaloguj się do swojego panelu klienta u swojego hostingodawcy (lub bezpośrednio do phpMydmin). Następnie przejdź do zakładki z bazami danych i utwórz nową bazę danych.
+
+Po stworzeniu bazy danych znajdziesz w panelu klienta odnośnik do menedżera phpMyAdmin. Kliknij w odnośnik do phpMyAdmin i zaloguj się do swojej bazy danych.
+
+Po wejściu do phpMyAdmin wybierz swoją bazę z menu po lewej stronie i przejdź do zakładki „Import”. W tym miejscu możesz zaimportować całą bazę danych bezpośrednio z pliku kopii zapasowej. Kliknij „Wybierz plik”, wskaż plik z rozszerzeniem .gzip i potwierdź import bazy danych.
+
+
+
+Gdy baza zostanie zaimportowana, to wyświetlą się jej tabele w menu bocznym. Wybierz teraz tabelę „wp_options”, klikając w nią lewym przyciskiem myszy. Pojawią się szczegóły tabeli „wp_options”. Znajdziesz tu dwa wpisy, których zawartość musisz zaktualizować. Są to wpisy siteurl oraz home i zawierają one ścieżkę do strony.
+
+
+
+Aktualna ścieżka wskazuje na twoją starą domenę więc jeżeli uległa ona zmianie należy poprawić rekordy.
+
+Kliknij w przycisk „Edytuj” obok pól „siteurl” oraz „home”, aby zmienić wartość.
+
+ 
+
+W każdym z tych pól wpisz swój adres domeny, którą wykupiłeś dla WordPressa. Przykładowo, jeśli domena to blog.moj.pl, to zamiast powyższej ścieżki należy wpisać:
+
+http://blog.moj.pl
+
+Potwierdź wykonanie zmiany. Gdy pola „siteurl” oraz „home” wskazują na twoją domenę, to możesz wyjść z panelu phpMyAdmin.
+
+Krok 3: Przekopiuj pliki WordPressa z komputera na serwer
+Pierwszym krokiem jest przekopiowanie plików na twój serwer zewnętrzny. Do tego będziesz potrzebować dowolnego klienta FTP, czyli programu, który pozwoli połączyć Ci się z twoim serwerem i przekopiować na niego pliki. Jednym z popularniejszych klientów FTP jest program FileZilla.
+
+Pobierz FileZilla
+
+Uruchom program FileZilla, a następnie kliknij „Plik > Menedżer stron”. W tym miejscu możesz skonfigurować swoje połączenie z serwerem FTP.
+
+Kliknij w przycisk „Nowy adres” po lewej stronie, aby dodać nowy wpis. W zakładce „Ogólne” musisz wypełnić odpowiednie pola, aby można było się połączyć z serwerem. Są to następujące pola:
+
+Serwer: wpisz tu adres serwera FTP
+Port: wpisz numer portu (zazwyczaj jest to 21)
+Tryb logowania: wybierz „Normalne”
+Użytkownik: podaj nazwę użytkownika dla konta FTP
+Hasło: podaj hasło dla konta FTP
+Wszystkie powyższe dane powinieneś znaleźć w wiadomości od swojego hostingodawcy. Gdy skonfigurujesz już całe połączenie, to kliknij w przycisk „Połącz”, aby połączyć się z serwerem FTP.
+
+
+
+Po jednej stronie okna widzisz teraz zawartość swojego serwera FTP, po drugiej z kolei wyświetla się zawartość twojego komputera. Wejdź teraz do folderu  z WordPressem.
+
+
+
+Skopiuj folder z WordPressem na swój serwer FTP. Wystarczy w tym celu kliknąć folder z WordPressem prawym przyciskiem myszy i wybrać opcję „Wyślij”. Rozpocznie się wysyłanie plików WordPressa. Może to trochę potrwać, więc musisz uzbroić się w cierpliwość.
+
+Krok 4: Zaktualizuj plik wp-config.php o nowe dane do bazy MySQL
+Już prawie cały proces za tobą. Ostatnim krokiem jest zaktualizowanie zawartości pliku wp-config.php, który wysłałeś wraz z resztą plików WordPressa na serwer FTP. Plik ten zawiera dane do logowania do bazy danych, jednak póki co wskazuje on na twoją starą bazę danych z poprzedniej lokalizacji. Sprawia to, że WordPress nie może się połączyć z bazą i strona nie będzie działać.
+
+Musisz edytować ten plik na serwerze FTP i wpisać w nim dane do twojej bazy danych w swoim hostingu. W tym celu w programie FileZilla zaloguj się na swój serwer FTP i wejdź do folderu z WordPressem. Poszukaj pliku wp-config.php, kliknij go prawym przyciskiem myszy i wybierz „Podgląd/Edytuj”.
+
+
+
+Zostaniesz zapytany, jakim programem otworzyć plik wp-config.php. Zostaw domyślne ustawienia i kliknij OK. Plik otworzy się w Notatniku systemowym.
+
+
+
+Musisz w nim teraz wpisać wszystkie dane do logowania do bazy danych na twoim serwerze. Odpowiadają za to poniższe pola:
+
+DB_NAME: wpisz tu nazwę bazy danych (widoczna w panelu klienta)
+DB_USER: wpisz nazwę użytkownika do bazy danych
+DB_PASSWORD: wpisz tu hasło do logowania do bazy danych
+DB_HOST: wpisz tu adres do bazy danych
+Dane te znajdują się w panelu klienta oraz pojawiają podczas tworzenia bazy danych. Po wszystkim kliknij „Plik > Zapisz” i zamknij okno Notatnika.
+
+
+
+Zostaniesz teraz zapytany przez program FileZilla, czy chcesz zaktualizować plik wp-config.php na serwerze. Kliknij „Tak”, aby potwierdzić wysłanie zaktualizowanego pliku. Możesz już zamknąć program FileZilla.
+
+Krok 5: Przekieruj domenę na folder WordPressa na swoim serwerze
+Ostatnim krokiem jest przekierowanie domeny, którą wykupiłeś, na swój serwer i na serwer FTP. Zaloguj się do swojego panelu klienta i przejdź do ustawień domeny.
+
+Możesz w tym miejscu wybrać, czy domena ma być przekierowana bezpośrednio na główny folder serwera (tzw. root), czy też na wybrany podfolder.
+
+Jeśli WordPressa przekopiowałeś „luzem” na swój serwer (czyli od razu po wejściu na serwer FTP widać pliki .PHP oraz foldery typu wp-content, wp-plugins, wp-includes), to domena powinna wskazywać bezpośrednio na główny katalog serwera.
+
+Jeśli jednak twój WordPress jest umieszczony w osobnym podfolderze na serwerze (np. w podkatalogu „wordpress”), to musisz wejść do ustawień domeny i ustawić ją tak, aby wskazywała na ten folder.
+
+Gdy to zrobisz, zaakceptuj zmiany i poczekaj, aż domena zostanie zaktualizowana o odpowiednie informacje.
+
+Znane problemy:
+1 Problem z bezpośrednimi linkami
+
+Chcesz używać bezpośrednich odnośników w formacie własnym. Musisz je włączyć w panelu admina menu ustawienia bezpośrednie odnośniki. Odznaczasz format własny i wklejasz /%postname%/
+Będziesz wtedy miał odnośniki w formacie http://domena/nazwa postu. Odnośniki takie są lepsze pod kątem wyszukiwarki Google i wiemy z nich o czym jest post. Ostatnio spotkałem się z problemem że po zainstalowaniu bloga na WordPress i włączeniu ich nie działały. Bloga można było zobaczyć tylko klikając adres główny domeny. Jeśli chcieliśmy wejść na inną stronę bloga wyskakiwała strona błędu 404. W panelu admina było to samo wyskakiwała strona błędu.
+
+Powodem zamieszania jest najczęściej brak lub nieodpowiedni plik .htaccess
+
+
+# BEGIN WordPress
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.php$ – [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+
+# END WordPress
+Nieraz zdarza się że to nie wystarczy i trzeba poprawić apache2.conf w katalogu
+
+etc/apache2
+
+dodając parametry:
+
+<Directory /var/www/>
+Options Indexes FollowSymLinks
+AllowOverride all
+Require all granted
+</Directory>
+2. Problemy z biblioteką mediów, aktualizacją i wgrywaniem wtyczek (ograniczenie wielkości plików).
+
+Nie zawsze odpowiednie wpisy w .htaccess są wystarczające gdyż problem może leżeć w konfiguracji pliku php.ini ( szczególnie na domyślnym pliku na VPS).
+
+Trzeba poprawić php.ini w katalogu
+
+etc/php/7.0/apache2/php.ini
+dodając (edytując) te linie kodu:
+
+upload_max_filesize = 50M
+
+post_max_size = 50M
+ 
+
+3. Nie wystarczające uprawnienia upload-u plików, aktualizacji lub instalacji wtyczek.
+
+Używając filezilli zmieniamy prawa do plików w katalogu wordpress-a
+
+Katalogom dajemy prawa 755
+
+Plikom dajemy 644
+
+Wyjątek stanowi katalog wp-content którego podkatalogi ustawiamy następująco :
+
+uploads (pliki i katalogi na 777)
+upgrade (pliki i katalogi na 777)
+themes (katalogi na 777 pliki 666)
+plugins (katalogi na 777 pliki 666)
+4. Jeżeli nasza strona miała włączoną wtyczkę przekierowującą ruch na https należy bezwzględnie po przekopiowaniu plików strony wejść do katalogu wtyczki i ją awaryjnie wyłączyć zmieniając jej nazwę – to sprawi że strona stanie się widoczna na nieszyfrowanym połączeniu do czasu zainstalowania odpowiedniego certyfikatu.
