@@ -1,0 +1,133 @@
+Dodawanie i usuwanie nowych kont
+Linuks posiada dwa sposoby tworzenia nowych kont :
+
+poprzez specjalne programy
+ręcznie – poprzez edycję odpowiednich plików
+ 
+
+Podstawowym programem do dodawania nowych użytkowników jest useradd o następującej składni :
+
+useradd -d katalog_domowy -g grupa_początkowa -G inne_grupy -s powłoka -u UID login
+
+gdzie :
+
+katalog_domowy – wartość ta określa nazwę nowo utworzonego użytkownika. Domyślnie zmienna ta przyjmuje wartość taką samą jak login
+gupa_początkowa – jest nazwą grupy początkowej użytkownika. Grupa ta musi już istnieć. W przypadku nie podania tej zmiennej system sam utworzy grupę dla użytkownika o nazwie zgodnej z nazwą loginu
+inne_grupy – lista dodatkowych grup, do których również należy użytkownik powłoka – nazwa powłoki użytkownika
+UID – numeryczna wartość identyfikatora użytkownika. Wartość ta musi być niepowtarzalna i większa od 99. W przypadku nie podania tej zmiennej system sam przydzieli użytkownikowi pierwszy wolny numer.
+
+Domyślne wartości dla zmiennych są podawane z pliku /etc/default/useradd
+
+Dodanie użytkownika o nazwie uczen do systemu może wyglądać następująco :
+
+groupadd uczen
+
+useradd -d /home/uczen -g uczen -s /bin/bash uczen
+lub
+useradd uczen
+
+ 
+
+Ręczne tworzenie konta wymaga więcej czasu od administratora systemu, ale za to pomoże w zrozumieniu mechanizmu tworzenia kont.
+
+Aby ręcznie utworzyć nowe konto dla użytkownika uczen należy wykonać następujące czynności :
+
+a) dodać wpis do pliku /etc/passwd i w przypadku maskowania haseł do /etc/shadow
+
+/etc/passwd
+uczen::504:504::/home/uczen:/bin/bash
+
+/etc/shadow
+uczen::0:99999:7:::
+
+Składnia pliku passwd jest następująca :
+
+nazwa_użytkownika:hasło:UID:GID:komentarz:katalog_domowy:polecenie_logowania
+
+gdzie :
+
+nazwa_użytkownika – jest polem zawierającym jednoznacznie identyfikującą nazwę użytkownika
+hasło – jest zakodowanym hasłem użytkownika. Jeśli w systemie użyto maskowania haseł to w miejscu tym znajduje się x. Brak jakiejkolwiek wartości oznacza brak hasła na tym koncie
+UID – unikalny numer reprezentujący użytkownika w systemie
+GID – unikalny numer wskazujący na domyślną grupę, do której należy użytkownik komentarz – zawiera informacje o użytkowniku dostępną dla innych użytkowników po wydaniu polecenia finger
+katalog_domowy – określa miejsce katalogu domowego użytkownika
+polecenie_logowania – polecenie, które zostaje uruchomione w trakcie logowania do systemu. Często jest to wpis wskazujący na powłokę.
+
+Składnia pliku /etc/shadow jest następująca :
+
+nazwa_użytkownika:hasło:data_zmiany_hasła:min:max:przypomnienie:ważność_konta: inne
+
+gdzie :
+
+nazwa_użytkownika – jest polem zawierającym jednoznacznie identyfikującą nazwę użytkownika
+hasło – zaszyfrowane hasło
+data_zmiany_hasła – data ostatniej zmiany hasła
+min – minimalny okres pomiędzy zmianami hasła
+max – maksymalny okres pomiędzy zmianami hasła
+przypomnienie – wartość ta określa na ile dni przed upływem terminu przypominać o zmianie hasła
+ważność_konta – termin ważności konta
+inne – miejsce zarezerwowane na przyszłe zmienne
+
+b) dodać wpis do /etc/group i /etc/gshadow
+
+/etc/gropu :
+uczen:x:504:
+
+/etc/gshadow :
+uczen:x::
+
+c) skopiować pliki z /etc/skel do utworzonego katalogu /home/uczen
+
+d) ustawić właściciela i prawa dostępu dla nowego użytkownika :
+
+cd /home/
+chown -R uczen:uczen uczen
+cd /home/uczen
+chmod -R go=u,go-w .
+chmod go= .
+
+e) ustawić hasło dla konta :
+
+passwd uczen
+
+Grupy
+Grupy umożliwiają dostęp do zasobów systemowych wybranym użytkownikom. Istnieją dwie możliwości zarządzania grupami :
+
+tworzenie nowej grupy dla każdego nowo utworzonego użytkownika
+dodawanie użytkowników do istniejących już grup
+Każda z tych metod ma swoje zalety i wady. Tworzenie osobnych grup dla nowych użytkowników zwiększa bezpieczeństwo ich danych.
+Załóżmy jednak, że nasz system pracuje w firmie, gdzie zatrudnionych jest pięciu księgowych i dziesięciu pracowników biurowych. Wszyscy ci pracownicy korzystają z zasobów naszego systemu. Księgowi posiadają wspólne bazy danych i pracownicy biurowi wspólne zasoby. Zasoby księgowych nie mogą być dostępne dla pracowników biurowych i odwrotnie.
+W takim przypadku dobrym rozwiązaniem jest stworzenie dwóch grup :
+
+księgowi
+biurowi
+Każdej z tych grup należy przydzielić odpowiednich pracowników i ustawić odpowiednie prawa dostępu dla nich i innych użytkowników, zabraniając tym ostatnim prawa dostępu.
+Takie rozwiązanie daje możliwość dzielenia się zasobami wśród danej grupy nie udostępniając ich innej.
+
+Do tworzenia nowej grupy służy polecenie :
+
+groupadd -g gid nazwa_grupy
+lub
+groupadd nazwa grupy
+
+gdzie :
+
+gid – numeryczna wartość identyfikatora grupy. Wartość ta musi być niepowtarzalna.
+Wartości od 0-99 są zarezerwowane dla kont systemowych i nie powinny być używane.
+W przypadku nie podania gid system sam przydzieli grupie pierwszą wolną wartość.
+
+Aby skasować daną grupę należy wydać polecenie :
+
+groupdel nazwa_grupy
+
+Podczas dodawania grup system modyfikuje następujące pliki :
+
+/etc/group
+
+zawiera on wszystkie informacje o grupach.
+Każdy wpis zajmuje jedną linię, mającą następujący format :
+nazwa_grupy:hasło:GID:lista_użytkowników
+
+/etc/gshadow
+
+zawiera bezpieczne informacje o kontach grup.
