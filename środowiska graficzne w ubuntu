@@ -1,0 +1,120 @@
+GNOME Classic
+
+GNOME Classic – klasyczny GNOME.
+WWW: http://gnome.org.
+Instalacja:
+
+sudo apt-get install gnome-session-flashback
+Cinnamon
+
+Cinnamon – GNOME 3 z klasycznym pulpitem.
+WWW: http://cinnamon.linuxmint.com.
+Instalacja:
+
+sudo add-apt-repository ppa:gwendal-lebihan-dev/cinnamon-stable
+sudo apt-get update
+sudo apt-get install cinnamon
+Dodatkowe:
+
+style – http://cinnamon-spices.linuxmint.com/themes,
+aplety – http://cinnamon-spices.linuxmint.com/applets,
+rozszerzenia – http://cinnamon-spices.linuxmint.com/extensions.
+Mate
+
+Mate – fork GNOME 2 dla GNOME 3
+WWW: http://mate-desktop.org.
+Instalacja:
+
+sudo add-apt-repository "deb http://packages.mate-desktop.org/repo/ubuntu precise main"
+sudo apt-get update
+sudo apt-get install mate-archive-keyring
+sudo apt-get update
+sudo apt-get install mate-core mate-desktop-environment
+Uwagi: Aby nie było konfliktów z aplikacjami Gnome 3 zmieniono nazwy podstawowego oprogramowania.
+Menadżer plików: Nautilus → Caja
+Menadżer archiwów: File-Roller -> Engrampa
+Przeglądarka obrazów: Eye of GNOME -> Eye of MATE
+Przeglądarka dokumentów: Evince -> Atril
+Kalkulator: Gcalctool -> MateCalc
+Edytor tekstu: Gedit -> Pluma
+Edytor menu: Alacarte -> Mozo
+Konfiguracja: GConf -> MateConf
+Menadżer okien: Metacity -> Marco
+Ekran logowania: GDM -> MDM
+GNOME Shell (GNOME 3)
+
+GNOME Shell (GNOME 3)
+WWW: http://gnome.org/gnome-3/.
+Instalacja:
+
+sudo apt-get install gnome-shell
+KDE
+
+KDE
+WWW: http://kde.org/.
+Instalacja:
+
+sudo apt-get install kubuntu-desktop
+XFCE
+
+XFCE
+WWW: http://xfce.org/.
+Instalacja:
+
+sudo apt-GET install xubuntu-desktop
+LXDE
+
+LXDE
+WWW: http://lxde.org/.
+Instalacja:
+
+sudo apt-get install lubuntu-desktop
+Xmonad
+
+Xmonad
+WWW: http://xmonad.org/.
+Instalacja:
+
+sudo apt-get install xmonad
+Enlightenment
+
+Enlightenment
+WWW: http://enlightenment.org/.
+Instalacja:
+
+sudo apt-get install e17
+FVWM-Crystal
+
+FVWM-Crystal
+WWW: http://fvwm-crystal.org/.
+Instalacja:
+
+sudo apt-get install fvwm-crystal
+IceWM
+
+IceWM
+WWW: http://icewm.org/.
+Instalacja:
+
+sudo apt-get install icewm
+Fluxbox
+
+Fluxbox
+WWW: http://fluxbox.org/.
+Instalacja:
+
+sudo apt-get install fluxbox
+Window Maker
+
+Window Maker
+WWW: http://windowmaker.info/.
+Instalacja:
+
+sudo apt-get install wmaker
+AfterStep
+
+AfterStep
+WWW: http://afterstep.org/.
+Instalacja:
+
+sudo apt-get install afterstep
