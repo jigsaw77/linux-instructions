@@ -4,12 +4,12 @@ Wszystkie nałożone bany są aktywne tylko podczas pracy programu fail2ban i s�
 
 Fail2ban jest dostępny w repozytoriach Debiana i Ubuntu, zatem aby go zainstalować wydajemy polecenie:
 
-apt-get install fail2ban
+#apt-get install fail2ban
 Fail2ban w domyślnej konfiguracji włączony będzie dla autoryzacji poprzez ssh.
 
 Kopiujemy domyślny plik  /etc/fail2ban/jail.conf zawierający standardową konfigurację do pliku /etc/fail2ban/jail.local gdyż domyślny plik może zostać nadpisany podczas aktualizacji:
 
-cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+#cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
 W pliku /etc/fail2ban/jail.local można zmodyfikować kilka parametrów. Kilka najważniejszych to:
 
 ignoreip: w tym parametrze podajemy listę adresów IP które powinny być wyłączone z zasad fail2ban. Można dodać swój adres IP.
@@ -29,13 +29,13 @@ Fail2ban monitoruje logi plików dla prób połączeń. Jeśli z danego adresu I
 
 Wyświetlenie bieżącej konfiguracji:
 
-fail2ban-client –d
+#fail2ban-client –d
 Wyświetlanie bieżących banów:
 
-iptables -L -n -v
+#iptables -L -n -v
 Jeśli chcemy usunąć bana to znajdujemy nazwę łańcucha(jail) i numer reguły w tym łańcuchu dla adresu, który chcemy odblokować(nr_reg) i wykonujemy:
 
- iptables -D jail nr_reg
+#iptables -D jail nr_reg
 Restart usługi fail2ban wykonujemy za pomocą polecenia:
 
-/etc/init.d/fail2ban restart
+#/etc/init.d/fail2ban restart
