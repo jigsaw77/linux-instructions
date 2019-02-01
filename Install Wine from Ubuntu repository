@@ -1,0 +1,36 @@
+To install Wine from a standard Ubuntu repository open up terminal and enter:
+
+FOR 64bit:
+$ sudo apt install wine64
+FOR 32bit:
+$ sudo apt install wine32
+Check your version once the Wine installation is complete:
+
+$ wine --version
+wine-3.0
+Install Wine from WineHQ repository
+The following procedure can be used to install Wine directly using WinHQ packages. To start add i386 architecture if you are running your Ubuntu 18.04 system on 64bit hardware:
+
+$ sudo dpkg --add-architecture i386 
+Next add WineHQ signing key and repository:
+
+$ wget -qO- https://dl.winehq.org/wine-builds/Release.key | sudo apt-key add -
+$ sudo apt-add-repository 'deb http://dl.winehq.org/wine-builds/ubuntu/ artful main'
+Next, you can make a choice to select between Wine stable or development version.
+
+WineHQ Stable
+To install stable WineHQ packages enter:
+
+sudo apt-get install --install-recommends winehq-stable
+Check version after Wine installation:
+
+$ wine --version
+wine-3.0
+WineHQ Development
+To install stable WineHQ packages enter:
+
+sudo apt-get install --install-recommends winehq-devel
+Check version after Wine installation:
+
+$ wine --version
+wine-3.8
