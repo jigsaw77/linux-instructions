@@ -1,0 +1,70 @@
+Mając wykupiony i skonfigurowany wirtualny serwer prywatny (VPS) możemy się pokusić o uruchomienie własnego darmowego serwera Team Speak 3 z ograniczeniem do 32 slotów co w większości wypadków wystarczy żeby posiedzieć i pograć czy pogadać ze znajomymi.
+
+Nikomu nie muszę tłumaczyć że na publicznych serwerach ts3 jest straszny burdel i ścisk.Mając własny serwer to Ty decydujesz o tym kto może na nim być ,sam tworzysz kanały itp.
+
+Żeby zainstalować i uruchomić serwer ts3 posłużymy się gotowym skryptem (LGM) .Skrypt umożliwia zdalne włączenie , wyłączenie , i restart serwera ts3 przez ssh
+
+Zaczynamy od zalogowania się do VPS-a  przez putty jako root.
+
+Instalujemy konieczne biblioteki:
+
+sudo dpkg --add-architecture i386; sudo apt-get update;sudo apt-get install mailutils 
+postfix curl wget file bzip2 gzip unzip bsdmainutils python util-linux libmariadb2
+W konsoli wprowadzamy polecenia:
+
+adduser ts3server
+(dodajemy nowego użytkownika w systemie o nazwie ts3server)
+
+Ubuntu prosi nas o nadanie użytkownikowi hasła i jego powtórzenie a następnie zapisanie ustawień.
+Teraz logujemy się na nowego użytkownika komendą
+
+su - ts3server
+2. Teraz czas na pobranie skryptu
+
+wget http://server.prsclan.pl/app/LGM/ts3server.txt
+3.Czynimy skrypt plikiem wykonywalnym
+
+chmod +x ts3server
+4. Teraz czas na uruchomienie instalacji
+
+./ts3server install
+
+Podczas instalacji postępuj zgodnie z pojawiającymi się instrukcjami
+
+Komendy na serwerze
+Kompletny zestaw komend uzyskamy po wpisaniu w konsolę:
+
+./ts3server
+Uruchomienie serwera
+start
+./ts3server start
+stop
+./ts3server stop
+restart
+./ts3server restart
+Aktualizacja serwera
+Skrypt umożliwia aktualizację naszego serwera poprzez wpisanie komendy:
+
+./ts3server update
+Debugging
+Informacje szczegółowe o serwerze
+Możesz uzyskać szczegółowe dane na temat serwera takie jak hasła , porty , konfiguracje pliki itp poprzez komendę:
+
+./ts3server details
+Debug
+W przypadku problemów z działaniem serwera uruchom funkcję:
+
+./ts3server debug
+Logi
+Skrypt tworzy logi serwera , skryptu ,konsoli w podanej lokalizacji:
+
+/home/ts3server/logs
+Backup
+Opcja backup pozwala stworzyć kopię zapasową naszego serwera w archiwum bzip2.
+
+./ts3server backup
+
+Uwagi:
+Skrypt blokuje możliwość uruchomienia z konta root ,pamiętaj więc żeby serwer ts3 
+instalować na zwykłym koncie użytkownika.
+Jeżeli nie wiesz jak postawić własny VPS zapraszam tu:Instacja i konfiguracja serwera VPS
