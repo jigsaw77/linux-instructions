@@ -1,0 +1,45 @@
+Sposób 1. Zmiana adresu strony poprzez edycję  wp-config.php
+Pierwszy sposób, jaki przedstawimy to edycja pliku konfiguracyjnego WordPressa. Aby, zmienić adres strony wystarczy za pomocą klienta FTP edytować plik config.php, który znajduje się w głównym katalogu strony. Następnie przejść do ostatniej linii i wkleić poniższy kod:
+
+1
+2
+define(‘WP_HOME’, ‘http://nowadomena.pl’);
+define(‘WP_SITEURL’, ‘http://nowadomena.pl’);
+Rozwiązanie to pozwoli nam na zmianę adresu URL naszej strony poprzez zdefiniowanie w pliku konfiguracyjnym konkretnego adresu. Jedyną wadą takiego rozwiązania jest brak możliwości zmiany adresu w panelu administracyjnym.
+
+Sposób 2. Edycja bazy w phpmyadmin
+Podobnie prosty sposób, jak poprzedni. W celu zmiany adresu strony należy zalogować się do phpMyAdmin, znaleźć tabelę, w której zapisane są nasze ustawienia (domyślnie wp_options) oraz odnaleźć dwie wartości: ‚siteurl’ oraz ‚home’, aby ułatwić sobie wyszukanie tych pól warto w „filtrowanie wierszy” wpisać „http”.
+
+zmiana domeny wordpress
+
+Cały zabieg polega na podmianie starego adresu na nowy, poprzez opcję Edytuj.
+
+edycja bazy danych
+
+Sposób 3. Użycie funkcji update_options
+Trzecim sposobem, jaki chcielibyśmy przedstawić, jest aktualizacja ustawień, poprzez użycie funkcji update_options. Funkcja ta pozwala na nadpisanie ustawień w bazie danych bez konieczności logowania się i zmiany wartości ‚siteurl’ oraz ‚home’ poprzez phpMyAdmin. W tym celu korzystając z klienta FTP należy edytować plik functions.php, który znajduje się w głównym katalogu szablonu naszej strony, a następnie zaraz po <?php dodać poniższy kod:
+
+1
+2
+update_option(‘siteurl’, ‘http://nowadomena.pl’);
+update_option(‘home’, ‘http://nowadomena.pl’);
+Po zapisaniu zmian należy odświeżyć stronę główną, a ustawienia zostaną nadpisane. Po poprawnym wykonaniu skryptu należy usunąć powyższy kod z pliku functions.php.
+
+UWAGA! W przypadku, jeśli Twój szablon nie posiada pliku functions.php, należy utworzyć nowy plik i dodać do niego poniższy kod:
+
+1
+2
+3
+4
+<?php
+update_option(‘siteurl’, ‘http://nowadomena.pl’);
+update_option(‘home’, ‘http://nowadomena.pl’);
+?>
+Po umieszczeniu pliku na serwerze oraz odświeżeniu strony głównej adres strony powinien zostać zmieniony, a plik należy usunąć z serwera.
+
+Sposób 4. Zmiana przed przeniesieniem strony
+Wychodząc poza nasze początkowe założenia, możemy dokonać zmiany adresu strony poprzez Kokpit. Wystarczy przed zmianą adresu i przeniesieniem strony wgrać wtyczkę Automatic Domain Changer. Wtyczka ta pozwala na zmianę wszystkich adresów URL znajdujących się w naszej bazie danych. Również tych, które znajdują się we wpisach.
+
+zmiana adresu przez kokpit
+
+Przedstawione przez nas sposoby pozwalają na łatwą i bezproblemową zmianę adresu URL naszej strony. Przed wykonaniem któregokolwiek z nich radzimy wykonać zawsze kopię zapasową plików i ustawień zawartych w bazie danych.
