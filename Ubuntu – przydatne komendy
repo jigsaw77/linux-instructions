@@ -1,0 +1,32 @@
+Z konsoli korzysta prawie każdy użytkownik Linuksa. Warto poznać najpopularniejsze komendy, które usprawnią naszą pracę z komputerem.
+
+apt-get update – odświeżanie wszystkich dostępnych paczek
+apt-get upgrade – aktualizacja wszystkich dostępnych paczek
+apt-get dist-upgrade – aktualizacja wszystkich dostępnych paczek z nadpisywaniem; aktualizacja wersji Ubuntu
+apt-get install pkg – instalacjia programu o przykładowej nazwie pkg
+apt-get purge pkg – usuwanie programu o przykładowej nazwie pkg
+apt-get autoremove – usuwanie nieużywanych pakietów
+
+apt-get --purge remove - usunięcie pakietu
+
+sudo apt autoremove – usuwanie nieużywanych pakietów
+apt-get -f install – próbuje naprawić uszkodzone pakiety
+
+apt –fix-broken install – próbuje naprawić uszkodzone pakiety
+dpkg –configure -a – próbuje naprawić uszkodzone pakiety
+dpkg -i paczka.deb – instalacja pliku paczka.deb
+(plik) /etc/apt/sources.list – lista repozytoriów APT
+
+sudo chmod nazwa_folderu 666 – sprawi,że każdy będzie mógł zapisywać oraz odczytywać wszystko wewnątrz tego folderu. Jeżeli natomiast użyjemy parametr 777 dla pliku, wszyscy będą mogli go wykonywać(uruchamiać).
+
+sudo kill [PID] – Program może zużywać więcej zasobów niż zwykle lub po prostu nie możesz zamknąć go w normalny sposób. Właśnie wtedy z pomoc przychodzi nam polecenie KILL w terminalu. Na początek musimy znaleźć PID (numer identyfikacyjny procesu). Możemy tego dokonać wykonując np. polecenie TOP lub PS -aux.
+
+sudo auto-apt ./configure – Często się zdarza przy próbie instalacji nowego oprogramowania, że zależności pomiędzy pakietami nie zostały spełnione. Innymi słowy brakuje oprogramowania, które jest niezbędne do poprawnej jego instalacji lub działania. W dystrybucjach opartych na Debianie(w tym Ubuntu) możesz zainstalować pakiet o nazwie auto-apt, który zatrzyma kompilator w momencie wykrycia brakujących zależności abyś mógł je zainstalować ze źródeł
+
+Przełączenie do trybu tekstowego.
+Gdy przykładowo serwer Xów zawiesił się lub uniemożliwia Ci wykonanie jakichkolwiek czynności możesz chcieć przełączyć się do trybu tekstowego bez niepotrzebnego resetowania komputera. W każdej chwili możesz się przełączyć używając kombinacji klawiszy CTRL+ALT+F2 ,a następnie zalogować się na swoje konto.
+
+Powrót do trybu graficznego.
+Kiedy naprawimy już usterki za pomocą linii komend, bez problemu przełączymy się do środowiska graficznego dzięki kombinacji CTRL+ALT+F7. Gdyby jednak stało się ,iż ten skrót nie zadziała, wtedy należy spróbować F7 zastąpić jednym z Fów pomiędzy F3-F6.
+
+Aby powyższe komendy działały muszą być uruchamiane w trybie roota, w tym celu przed każdą należy dodać polecenie sudo.
