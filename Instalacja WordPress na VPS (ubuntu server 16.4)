@@ -1,0 +1,97 @@
+W tym artykule zajmiemy się instalacją WordPress-a na własnym wirtualnym serwerze prywatnym (VPS).
+Przygotowanie systemu pod WordPress-a
+
+1.Instalacja  LAMP Server 
+Lamp Server to inaczej paczka niezbędnego oprogramowania konieczna do uruchomienia naszej strony www opartej na WordPress czyli
+
+Linux + Apache + MySQL + PHP
+
+Zaczynamy zabawę wydając komendy w konsoli na prawach root-a:
+
+apt-get install mysql-server mysql-client
+w oknie dialogowym wpisujemy hasło do serwera i je potwierdzamy.
+
+apt install apache2
+apt-get install libapache2-mod-php7.0 php7.0 php7.0-cgi php7.0-cli php7.0-common php7.0-curl php7.0-dev php7.0-gd php7.0-gmp php7.0-json php7.0-ldap php7.0-mysql php7.0-odbc php7.0-opcache php7.0-pgsql php7.0-pspell php7.0-readline php7.0-recode php7.0-snmp php7.0-sqlite3 php7.0-tidy php7.0-xml php7.0-xmlrpc php-all-dev libphp7.0-embed php7.0-bcmath php7.0-bz2 php7.0-enchant php7.0-fpm php7.0-imap php7.0-interbase php7.0-intl php7.0-mbstring php7.0-mcrypt php7.0-phpdbg php7.0-soap php7.0-sybase php7.0-zip php7.0-xsl
+Teraz restart apacha
+
+/etc/init.d/apache2 restart
+
+Instalacja phpMyAdmin
+
+apt-get install phpmyadmin
+ 
+
+Kiedy podczas instalacji pojawią się dwa pytania, na które odpowiadamy jak poniżej:
+
+Automatycznie przekierowany serwer WWW: –> apache2
+2) Configure database for phpmyadmin with dbconfig-common? –> Nie
+Po zakończonej instalacji musimy podlinkować nasz phpmyadmin do katalogu apacha, wpisujemy więc komendę:
+
+ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
+Po wszystkim wychodzimy z użytkownika root podjąć komendę
+
+exit
+ 
+
+2 Tworzymy bazę MySQL w phpmyadmin
+Logujemy się do swojej strony
+
+htttp://twojadomena.pl/phpmyadmin
+Otwieramy menu baza danych , wpisujemy nazwę bazy obok podajemy metodę porównania napisów jako:
+
+ utf8_polish_ci
+i klikamy utwórz
+
+Dane bazy będą konieczne później przy instalacji graficznej naszej strony www.
+
+ 
+
+ 
+
+3. Instalujemy WordPress
+Pobieramy najnowszą wersję WordPress-a ze strony:
+https://pl.wordpress.org/wordpress-4.8.3-pl_PL.zip
+
+Rozpakowujemy paczkę na swoim dysku lokalnym
+
+Kopiujemy rozpakowane pliki do katalogu Apache
+
+/var/www/html
+4 Konfiguracja katalogu WordPress-a
+Przed graficzną instalacją musimy nadać odpowiednie premisje do plików i katalogów
+
+ 
+
+sudo chown -R user:www /var/www/html
+gdzie user to nazwa użytkownika
+
+www- nazwa grupy użytkownika
+
+Następnie ustawimy dziedziczenia uprawnień na każdym z katalogów w katalogu głównym dokumentu. Powoduje to, że nowe pliki utworzone w tych katalogach dziedziczą grupę katalogu nadrzędnego (który właśnie ustawiliśmy na dane www) zamiast tworzyć grupę podstawową użytkownika. Dzięki temu upewniamy się, że kiedykolwiek utworzymy plik w katalogu w wierszu poleceń, serwer internetowy nadal będzie mieć nad nim prawa własności do grupy.
+
+sudo find /var/www/html -type d -exec chmod g+s {} \;
+Przyznamy grupie uprawnienia do zapisu do katalogu zawartości wp, aby interfejs WWW mógł zmieniać motyw i dodatki:
+
+sudo chmod g+w /var/www/html/wp-content
+
+W ramach tego procesu damy serwerowi dostęp do zapisu do wszystkich treści w tych 3 katalogach:
+
+sudo chmod -R g+w /var/www/html/wp-content/themes
+sudo chmod -R g+w /var/www/html/wp-content/plugins
+sudo chmod -R g+w /var/www/html/wp-content/uploads
+5. Ostatnia czynność to konfiguracja w trybie interfejsu
+Po zakończeniu konfiguracji serwera możemy zakończyć instalację przez interfejs sieciowy. W przeglądarce internetowej przejdź do nazwy domeny serwera lub publicznego adresu IP:
+
+
+http://server_domain_or_IP
+Wybieramy język instalacji:
+
+
+
+Następnie przejdziesz do głównej strony konfiguracji. Wybierz nazwę dla swojej witryny WordPress i wybierz nazwę użytkownika (zaleca się, aby nie wybierać czegoś takiego jak “admin” ze względów bezpieczeństwa). Silne hasło jest generowane automatycznie. Zapisz to hasło lub wybierz alternatywne silne hasło. Wprowadź swój adres e-mail i wybierz, czy chcesz zniechęcić wyszukiwarki do indeksowania Twojej witryny:
+
+
+
+Po kliknięciu z przodu zostanie wyświetlona strona z monitem o zalogowanie:
+
