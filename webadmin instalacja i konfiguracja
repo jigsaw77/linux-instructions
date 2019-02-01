@@ -1,0 +1,106 @@
+webadmin instalacja i konfiguracja
+Webmin to panel zarządzania serwera przez przeglądarkę internetową. Pozwala zarządzać serwerem przez intuicyjny interfejs strony. Za pomocą Webmin możesz zmieniać ustawienia różnych pakietów w trakcie działania serwera.
+
+Napiszę jak zainstalować i skonfigurować Webmin na serwerze z Ubuntu 16.04 oraz jak można zabezpieczyć panel na serwerze z certyfikatem SSL  Lets Encrypt. Po instalacji będziesz mógł dodać nowe konta użytkowników, zaktualizować pakiety na serwerze z panelu sterowania.
+
+Wymagania:
+
+Ubuntu server 16.04 z użytkownik z uprawnieniami sudo.
+Zainstalowany serwer Apache według instrukcji Instalacja Linux, Apache, MySQL, PHP. Będziemy korzystać z Apache dla weryfikacji certyfikatu SSL domeny.
+Krok 1 — Instalacja Webmin
+Najpierw musimy dodać repozytorium Webmin w systemie żeby można było zainstalować go poprzez standardowy menedżer pakietów. Zrobimy to poprzez edycję pliku /etc/apt/sources.list
+
+Otwórz plik w edytorze:
+
+sudo nano /etc/apt/sources.list
+
+Następnie dodaj ten wiersz na końcu pliku:
+
+
+deb http://download.webmin.com/download/repository sarge contrib
+
+Następnie musimy dodać klucz Webmin PGP aby system mógł zaufać nowemu repozytorium:
+
+wget http://www.webmin.com/jcameron-key.asc
+sudo apt-key add jcameron-key.asc
+
+aktualizujemy listę pakietów:
+
+sudo apt-get update
+
+instalujemy Webmin:
+
+sudo apt-get install webmin
+
+w przypadku niepowodzenia instalacji wpisz :
+
+wget http://prdownloads.sourceforge.net/webadmin/webmin_1.860_all.deb
+
+dpkg --install webmin_1.860_all.deb
+
+apt-get -f install
+
+Po zakończeniu instalacji, zostanie wyświetlony komunikat:
+
+Webmin install complete. You can now login to 
+https://ip_serwera:10000 as root with your 
+root password, or as any user who can use `sudo`.
+Uwaga: jeśli zainstalowałeś ufw trzeba uruchomić polecenie sudo ufw allow 10000 , aby webadmin przeszedł przez zaporę.
+ 
+
+Krok 2 — Dodanie certyfikatu SSL od Lets Encrypt
+Webmin już jest skonfigurowany  i możemy wejść do niego poprzez protokół https, ale to jest self-signed certyfikat. Spróbujemy zamienić taki certyfikat na darmowy od Lets Encrypt.
+
+Przejdziemy do https://twoja_domena:10000 w przeglądarce internetowej, zastępując twoja_domena nazwą domeny, którą podałeś jako hostname na serwerze.
+
+Zostanie wyświetlony ekran logowania, gdzie wpisujemy albo hasło od root użytkownika albo namiary od innego użytkownika, który był utworzony wcześniej na serwerze.
+Logowanie się to Webmin
+
+Po zalogowaniu się pojawi się panel sterowania Webmin. Zanim będziemy mogli zmienić certyfikat należy sprawdzić hostname serwera.
+
+Pulpit główny panelu Webmin (Ubuntu Linux 16.04)
+
+Kliknięcie w tą domenę przekieruje nas do strony zarządzania hostname`mem i ustawieniami DNS serwera. Wpisujemy poprawną domenę, która będzie kierowała nas do panelu administracyjnego serwera i klikamy Zapisz.
+
+Po tym, jak skonfigurujemy hostname serwera, klikamy w przycisk Webmin na lewym pasku nawigacji, a następnie Webmin Configuration.
+
+Następnie wybieramy protokół szyfrowania SSL (SSL Encryption) z listy ikon i potem zakładkę Lets Encrypt. Pojawi się ekran jak poniżej:
+
+Konfiguracja SSL w Webmin (Ubuntu Linux 16.04)
+Na tej zakładce możemy podać domeny, dla których chcemy wygenerować certyfikat SSL lub odnowić. Lets Encrypt certyfikaty wygasają za 3 miesiące, ale możemy ustawić w webmin automatyczną aktualizację certyfikatów co miesiąc. Lets Encypt będzie sprawdzał plik weryfikacyjny na naszym serwerze, więc musimy ustawić ścieżkę, gdzie webmin utworzy ten plik. Ustawimy folder /var/www/html do przechowywania pliku weryfikacyjnego, bo domyślnie do tego folderu mamy dostęp z zewnątrz. Musimy wykonać następujące kroki, aby skonfigurować certyfikat:
+
+Uzupełniamy Hostnames for certifiticate nazwami domen internetowych.
+W polu Website root directory for validation file wybieramy Other directory i wpisujemy /var/www/html.
+W Months between automatic renewal wybieramy drugą opcję wpisując 1 w polu tekstowym i zaznaczając przycisk po lewej stronie od pola z jedynką.
+Klikamy Request Certificate. Za kilka sekund pojawi się okno potwierdzenia.
+Teraz za 30 sekund możemy odświeżyć stronę w przeglądarce i zobaczymy ważny certyfikat w polu domeny.
+
+Krok 3 – Wykorzystanie Webmin
+Mamy teraz zabezpieczony i działający darmowy panel zarządzania Webmin, zobaczmy w  jaki sposób można go używać.
+
+Ten panel posiada wiele różnych modułów, które mogą kontrolować prawie wszystko zaczynając od serwera DNS bind i czymś takim, jak dodanie użytkowników do systemu/serweru. Zobaczmy, jak można utworzyć nowego użytkownika, a następnie jak zaktualizować system operacyjny za pomocą Webmin.
+
+Zarządzanie użytkownikami i grupami
+Najpierw wchodzimy do zakładki System, klikamy w Users and Groups. I już na tej stronie można dodawać użytkowników, zarządzać nimi lub dodawać i zarządzać grupami.
+
+Stwórzmy nowego użytkownika o nazwie test , który będzie używany do hostingu aplikacji internetowych. Aby dodać użytkownika klikamy Create a new user w górnej części tabeli z użytkownikami. System nas przekieruje do okienka z dodaniem nowego użytkownika, w którym można określić nazwę użytkownika, hasło, grupy i inne parametry. Wykonamy następujące instrukcje, aby utworzyć użytkownika:
+
+Wpisujemy w Username test.
+Wybieramy Automatic dla User ID.
+Podajemy opis użytkownika w Real Name Test user.
+Jako Home Directory wybieramy Automatic.
+Dla Shell wybieramy /bin/bash z listy rozwijanej.
+Do Password, wybieramy Normal Password i wpisujemy go.
+Jako Primary Group wybieramy New group with same name as user.
+Dla Secondary Group, bierzemy sudo z listy All groups, a następnie klikamy -> aby dodać grupę do list grup.
+Klikamy Create, aby utworzyć nowego użytkownika.
+Przy tworzeniu użytkownika, można ustawić parametry dla ważności hasła użytkownika, shell użytkownika itd.
+
+Dalej spróbujemy zaktualizować system
+
+Aktualizacja Pakietów
+Webmin pozwala zaktualizować wszystkie pakiety przez interfejs użytkownika. Aby zaktualizować wszystkie pakiety, po pierwsze, przechodzimy na pulpicie Dashboard  w Package updates. Jeżeli aktualizacje są dostępne – zobaczymy aktywny link w którym jest podana liczba dostępnych aktualizacji, jak pokazano na poniższym obrazku:
+
+Aktualizacja paczek na Ubuntu poprzez Webmin
+
+Klikamy w ten link, a następnie wybieramy Update selected packages, aby rozpocząć aktualizację. Może zostać wyświetlony komunikat z prośbą o ponowne uruchomienie serwera.
