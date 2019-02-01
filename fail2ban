@@ -1,0 +1,41 @@
+Fail2ban jest narzędziem pomagającym zabezpieczyć serwery oparte o systemy Linux skanując logi (np. logi serwera ssh lub ftp), wyszukując błędy autentykacji, po czym wykonując aktualizacje ustawień firewall, żeby odrzucał połączenia z danego IP.
+
+Wszystkie nałożone bany są aktywne tylko podczas pracy programu fail2ban i są usuwane podczas jego zatrzymania. W konsekwencji tego bany nie są pamiętane pomiędzy restartami programu!
+
+Fail2ban jest dostępny w repozytoriach Debiana i Ubuntu, zatem aby go zainstalować wydajemy polecenie:
+
+apt-get install fail2ban
+Fail2ban w domyślnej konfiguracji włączony będzie dla autoryzacji poprzez ssh.
+
+Kopiujemy domyślny plik  /etc/fail2ban/jail.conf zawierający standardową konfigurację do pliku /etc/fail2ban/jail.local gdyż domyślny plik może zostać nadpisany podczas aktualizacji:
+
+cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+W pliku /etc/fail2ban/jail.local można zmodyfikować kilka parametrów. Kilka najważniejszych to:
+
+ignoreip: w tym parametrze podajemy listę adresów IP które powinny być wyłączone z zasad fail2ban. Można dodać swój adres IP.
+bantime: określa jak długo ( w sekundach)  ban będzie aktywny (domyślnie jest 10 minut).
+maxretry: ten parametr określa domyślną ilość prób połączenia zanim ban zostanie nałożony na adres IP(domyślnie jest 3).
+destemail: ta opcja pozwala ustawić adres e-mail, na który będą przychodzić powiadomienia zdarzeń
+logpath:  ważne aby sprawdzić dla każdej monitorowanej usługi czy ścieżka do pliku logów podana w parametrze logpath jest prawidłowa
+Jeśli chcemy zmienić monitorowane parametry dla danej usługi to modyfikujemy jej sekcję:
+
+[ssh] -> nazwa jaila
+enabled = true -> czy włączony  (jeśli wyłączony to enabled = false)
+port = ssh  -> port usługi - przyjmuje wartość numeryczną lub nazwę portu, listę nazw portów można uzyskać z pliku /etc/services
+filter  = sshd -> pierwszy człon nazwy filtra logów: /etc/fail2ban/filter.d/sshd.conf
+logpath  = /var/log/auth.log -> ścieżka do pliku monitorowanych logów - możliwa tylko jedna wartość, ale dopuszczalna jest *
+maxretry = 15 -> maksymalna ilość nieudanych prób autoryzacji
+Fail2ban monitoruje logi plików dla prób połączeń. Jeśli z danego adresu IP zostanie przekroczona maksymalna ilość prób połączeń to blokuje dostęp dla tego adresu i zdarzenie jest logowane do pliku /var/log/fail2ban.log.
+
+Wyświetlenie bieżącej konfiguracji:
+
+fail2ban-client –d
+Wyświetlanie bieżących banów:
+
+iptables -L -n -v
+Jeśli chcemy usunąć bana to znajdujemy nazwę łańcucha(jail) i numer reguły w tym łańcuchu dla adresu, który chcemy odblokować(nr_reg) i wykonujemy:
+
+ iptables -D jail nr_reg
+Restart usługi fail2ban wykonujemy za pomocą polecenia:
+
+/etc/init.d/fail2ban restart
