@@ -1,0 +1,312 @@
+Serwerowa wersja Ubuntu jest bardzo popularna wśród dostawców VPSów, a w sieci jest mnóstwo poradników jak poradzić sobie z konfiguracją. Niemniej z jednego trzeba zdać sobie sprawy, że wybierając opcję VPSa jesteśmy odpowiedzialni za cały serwer od a do z. Jeśli nie czujemy się na siłach to warto poszukać innej opcji.
+
+ 
+
+Skoro jednak staliśmy się szczęśliwymi posiadaczami VPSa, zapewne dostaliśmy hasło na roota oraz ip. Od czego zacząć?
+
+ 
+
+1) Od zmiany hasła roota na naprawdę skomplikowane.
+
+ 
+
+passwd root
+
+ 
+
+2) Aktualizujemy cały server (trzeba to wykonywać regularnie lub włączyć automat)
+
+ 
+
+apt update
+
+apt --list upgradable
+
+apt upgrade
+
+ 
+
+3) Jeśli nie mamy to tworzymy parę kluczy ssh na swoim komputerze. Warto później zrobić kopię zapasować obu kluczy.
+
+ 
+
+ssh-keygen
+
+ 
+
+4) Na VPSie dodajemy nowy użytkownika, za pomocą którego będziemy dokonywać wszystkich czynności administracyjnych
+
+ 
+
+adduser nazwauzytkownika
+
+usermod -aG sudo nazwauzytkownika
+
+ 
+
+ssh nazwauzytkownika@ip.servera
+
+ 
+
+5) Kopiujemy nasz klucz lokalny na VPSa aby umożliwić logowanie bez hasła (dlatego należy wykonywać kopie swoich kluczy, zwłaszcza jeśli wyłączymy logowanie ssh przy użyciu hasła)
+
+ 
+
+ssh copy-id nazwauzytkownika@ip.servera
+
+ 
+
+Testujemy logowanie, nie powinniśmy być pytani o hasło
+
+ 
+
+ssh nazwauzytkownika@ip.servera
+
+ 
+
+6)  Zmieniamy domyślny port ssh oraz wyłączamy zdalne logowanie na konto root
+
+ 
+
+vi /etc/ssh/sshd_config
+
+Port #zmieniamy 22 na inny
+
+PermitRootLogin #zmienamy na no
+
+PasswordAuthentication #zmieniamy na no jeśli chcemy wyłączyć logowanie ssh przy pomocy hasła, koniecznie musi być wcześniej przekopiowany nasz klucz publiczny ssh
+
+ 
+
+Restartujemy usługę ssh
+
+sudo systemctl reload sshd
+
+ 
+
+Od teraz logujemy się: ssh nazwauzytkownika@ip.servera -p numerportu
+
+ 
+
+7)  Instalujemy fail2ban,  który będzie banował ip próbujące nam zrobić brute force na port ssh
+
+ 
+
+sudo apt-get install fail2ban
+sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.conf.backup
+sudo vi /etc/fail2ban/jail.conf #jeśli chcemy zmienić domyślne wartości
+
+sudo systemctl status fail2ban.service #sprawadzamy status usługi
+
+ 
+
+8) Następnie potrzebujemy skonfigurować prostego firewalla, w serwerowej wersji ubuntu mamy już zainstalowane ufw
+
+ 
+
+Wyświetlamy listę predefiniowanych aplikacji dodanych od ufw
+
+sudo ufw app list
+
+ 
+
+Dodajemy port ssh taki jaki ustawiliśmy wcześniej w sshd_config
+
+ 
+
+sudo ufw allow numerportu/tcp
+
+ 
+
+Możemy również otworzyć porty dla ngxina w tym dla ssla.
+
+ 
+
+sudo ufw allow 'Nginx Full'
+
+ 
+
+Włączamy firefwall
+
+sudo ufw enable
+
+sudo ufw status
+
+ 
+
+9)  Instalujemy nginxa
+
+ 
+
+sudo apt install nginx
+
+ 
+
+10) Instalujemy maria-db, należy pamiętać o wybraniu mocnego (i innego !!) hasła dla konta root
+
+ 
+
+sudo apt install maria-db-server
+
+ 
+
+Uruchamiamy skrypt zabezpieczający naszą instalację czyli usuwamy konto anonymous,  nie pozwalamy na zdalne logowanie, usuwamy bazę testową, odświeżamy uprawnienia.
+
+sudo mysql_secure_installation
+
+ 
+
+11) Instalujemy php dla ngixna
+
+ 
+
+sudo apt-get install php-fpm php-mysql
+
+ 
+
+Zmieniamy jeden parametr w php związany z bezpieczeństwem
+
+sudo vi /etc/php/7.0/fpm/php.ini
+
+cgi.fix_pathinfo=0 #należy zmienić wartość na 1 oraz odkomentować
+
+ 
+
+sudo systemctl restart php7.0-fpm
+
+ 
+
+12) Domyślna konfiguracja ngxina
+
+ 
+
+Kopiujemy domyślną konfigurację ngxina, która posłuży nam za szkielet dla naszej strony:
+
+ 
+
+tail /etc/nginx/sites-available/default -n 13 | cut -c 2- | sudo tee /etc/nginx/sites-available/mojastrona.pl 1> /dev/null
+
+ 
+
+Edytujemy ustawienia, oczywiście będą się one różnić w zależności co chcemy hostować i z jakich modułów chcemy korzystać, ale w wersji najprostszej powinno to wyglądać tak:
+
+ 
+
+server {
+listen 80 default_server;
+listen [::]:80 default_server;
+
+#ścieżka gdzie chcemy trzymać pliki
+root /var/www/html;
+
+#dodajemy index.php
+index index.php index.html index.htm index.nginx-debian.html;
+
+#adres strony lub ip
+server_name mojastrona.pl;
+
+location / {
+try_files $uri $uri/ =404;
+}
+
+location ~ \.php$ {
+include snippets/fastcgi-php.conf;
+fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+}
+
+location ~ /\.ht {
+deny all;
+}
+}
+
+ 
+
+Testujemy konfigurację:
+sudo nginx -t
+
+ 
+
+Jeśli nie ma błędów to przeładowujemy ngixna:
+
+sudo systemctl reload nginx
+
+ 
+
+Sprawdźmy czy nasz server www działa:
+
+sudo vi /var/www/html/test.php
+
+ 
+
+Wpisujemy:
+
+<?php
+
+phpinfo();
+
+ 
+
+Po przejściu w przeglądarce na stronę: http://mojastrona.pl/test.php powinien pojawić się fileletowo-szary listing z informacjami o php.
+
+ 
+
+Po pomyślnym teście usuwamy stronę:
+
+sudo rm /var/www/html/test.php
+
+ 
+
+13)  Dalsza konfiguracja nginxa
+
+ 
+
+Powinnyśmy utworzyć podkatalogi, zwłaszcza jeśli chcemy mieć kilka stron i/lub poddomeny np.
+
+sudo mkdir -p /var/www/html/mojastrona.pl/
+
+ 
+
+Kiedy jesteśmy zadowoleni z naszej konfiguracji to tworzymy link symboliczny i „uaktywniamy” naszą stronę w ngixnie:
+
+sudo ln -s /etc/nginx/sites-available/mojastrona.pl /etc/nginx/sites-enabled
+
+ 
+
+Usuwamy domyślne konfigurację:
+
+sudo rm /etc/nginx/sites-enabled/default
+
+sudo nginx -t
+
+sudo systemctl restart nginx
+
+ 
+
+14) Kilka uwag na koniec
+
+ 
+
+a) W zależności jaki rodzaj  strony chcemy hostować mogą być wymagane dodatkowego moduły php czy ustawienia nginxa. Warto sięgnąć do dokumentacji.
+
+ 
+
+b) Należy zawsze pamiętać o zabezpieczeniu stron przy pomocy odpowiednich klauzul location { } jest to mniej więcej odpowiednik .htaccess w apachu.
+
+ 
+
+c)Jeśli mamy już w pełni działającą stronę należy zadbać o certyfikat ssl, który za darmo możemy wygenerować w letsencrypt mozilli:
+
+ 
+
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt-get update
+sudo apt-get install python-certbot-nginx
+sudo certbot --nginx -d mojastrona.pl -d www.mojastrona.pl
+
+ 
+
+Certyfikat powinien sam się odnowić w określonym czasie.
+
+ 
+
+d) Domyślnie logi ngixna znajdują się w /var/log/nginx Jeśli mamy kilka stron to  warto utworzyć nowe pliki z logami o np. zmienionej nazwie.
