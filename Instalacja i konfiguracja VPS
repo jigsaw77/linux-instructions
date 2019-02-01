@@ -1,0 +1,185 @@
+Kupując VPS lub serwer dedykowany często wybieramy system operacyjny Linux. System Linux ma wiele zalet, dzięki czemu jest najbardziej polecanym systemem na serwery hostingowe czy serwery gier.
+
+Dla wielu osób system Linux kojarzy się głównie z robieniem wszystkiego w konsoli tajemniczymi komendami. Owszem, wiele rzeczy najlepiej robi się przez terminal, ale nie jest to niezbędne.Wystarczy przeprowadzić podstawową konfigurację w terminalu a pozostałe prace wykonywać w wirtualnym pulpicie. Każdy użytkownik może  korzystać z serwera wirtualnego jak z normalnego desktop’owego komputera.
+
+Co musimy zrobić żeby mieć własnego skonfigurowanego VPS-a ?
+
+1. Musimy wykupić usługę serwera VPS u jednego z licznych na polskim rynku hostingodawców ( polecam SLDC zdecydowanie najkorzystniejszy pod względem wydajność / cena).Należy przemyśleć dokładnie jakich zasobów będziemy potrzebować (ile rdzeni ,RAM-u ,pojemność dysku).Hosting stron wymaga zdecydowanie mniej zasobów niż np. serwery gier.
+
+2. Wybór systemu operacyjnego którego będziemy używać na naszym VPS – zdecydowanie polecam wybór ubuntu server 64bit
+
+3. Po wykupieniu usługi z wybranym systemem operacyjnym otrzymujemy dane dostępowe (adres ip,port ssh dla połączenia z konsolą dla root-a) które zapisujemy sobie w bezpiecznym miejscu. W tym momencie mamy już wszystko co potrzebujemy do postawienia serwera.Serwer w zasadzie już działa ale połączyć się z nim możemy na razie tylko przez terminal.
+
+
+
+ 
+
+4.Wybór wirtualnego pulpitu
+Czym jest VNC?
+VNC – Virtual Network Computing – jest to system przekazywania obrazu z wirtualnego, bądź fizycznego środowiska graficznego. Tak mówi nam wikipedia. Ja powiem o tym troche prostszym językiem: VNC jest to taki program, który uruchamia nasz pulpit i zezwala na sterowanie nim z innego komputera.
+Jakie środowiska graficzne można zainstalować?
+Jakie się chce. Wybór ich jest ogromny. Do najpopularniejszych należą: XFCE, LXDE, GNOME, MATE.
+Każde środowisko graficzne ma swoje wady i zalety, lecz najważniejszą rzeczą przy wyborze jest ich zasobożerność.
+Ja osobiście polecam środisko LXDE mało waży i pożera najmniej RAM-u za który przecież musimy płacić 🙂
+5.Instalacja putty
+Wszystkie operacje będziemy wykonywali w terminalu do którego musimy się zdalnie połączyć więc musimy pobrać i zainstalować program-klient SSH putty. Konfiguracja Putty’ego nie powinna nikomu sprawić trudności. Musimy wpisać IP wykupionego serwera (lub domenę), wybrać port SSH przy protokole i kliknąć OPEN.
+
+
+
+6. Instalacja VNC
+Gdy już się połączymy zainstalujmy klient VNC (TightVNCServer jest najpopularniejszy i prosty w obsłudze, więc go bierzemy) wpisując komendę:
+
+ apt-get update
+ apt-get install tightvncserver
+Uruchamiamy i od razu wyłączamy VNC, aby utworzyć plik konfiguracyjny. Będziesz również poproszony do wpisania hasła, oraz hasła do samego widoku „pulpitu”. Hasło do widoku można pominąć, zaś hasło do wykonywania czegoś na „pulpicie” powinno być trudne. Nie wpisuj tam swojego hasła do użytkownika!
+
+ tightvncserver :1
+ tightvncserver -kill :1
+
+ Zainstalujmy także konsolowy edytor tekstu, bo przyda nam się później najlepiej Nano.
+
+ apt-get install nano
+7. Instalacja LXDE
+Wpisujemy w terminal:
+
+ apt-get install xorg lxde-core
+Teraz edytujemy konfigurację VNC:
+
+ nano ~/.vnc/xstartup
+Na sam koniec pliku dopisujemy:
+
+ lxterminal &
+ /usr/bin/lxsession -s LXDE &
+ 
+Wciskamy Ctrl + O i Enter, aby zapisać plik.
+
+Wciskamy Ctrl + b id żeby wyjść do konsoli.
+
+Używanie środowiska graficznego przez VNC z innego komputera
+Aby mieć dostęp do swojego serwera przez VNC musimy uruchomić na nim właśnie klienta VNC:
+
+ tightvncserver :1
+
+Przechodzimy do roboty na naszym komputerze. Potrzebujemy klienta VNC do oglądania „pulpitu”. Dla Windows jest to TightVNCViewer.
+Adres naszego serwera VNC to IP-serwera:1, przykładowo: 12.77.33.44:1
+
+Gdy klikniemu OK lub Enter, naszym oczom powinno ukazać się okno pulpitu serwera.
+
+
+
+ 
+
+Pora trochę wzbogacić nasz server wirirtualny w niezbędne narządzia takie jak server ftp , graficzny notatnik ,firewall i menedżer uruchomionych programów.
+
+1) Server ftp
+
+Otwieramy konsolę i wpisujemy
+
+apt-get install proftpd
+instalacja nie różni się od instalacji innego oprogramowania. Podczas instalacji wybieramy standalone i czekamy na zakończenie instalacji.
+
+
+
+ 
+
+Od teraz każde konto użytkownika ma przypisany dostęp do servera ftp z domyślnym portem 21.
+
+2) Dodawanie nowych użytkowników do naszego servera
+
+Otwieramy konsolę i wpisujemy
+
+adduser <nazwa użytkownika>
+konsola prosi nas o 2-krotne wpisanie tego samego hasła (pamiętaj żeby hasło było trudne do odgadnięcia)
+
+na koniec możemy wpisać dane użytkownika – jak nie chcemy podawać pola mogą zostać puste
+
+ostatnie pytanie wymaga potwierdzenia prawidłowego wprowadzenia wszystkich wcześniej wpisanych danych
+
+Po za kończeniu operacji zostanie też utworzony domyślny katalog użytkownika z prawami do zapisu w lokalizacji
+
+ /home/<nazwa użytkownika>
+
+3) Graficzny notatnik
+
+Notatnik nano jest trochę niewygodny w środowisku graficznym dlatego zainstalujemy sobie gedit
+
+Otwieramy konsolę i wpisujemy
+
+sudo apt-get install gedit
+Po instalacji nasz edytor tekstu jest już gotowy do pracy
+
+
+
+ 
+
+4) Zmiana strefy czasowej
+
+Domyślnie w otrzymanym VPS-ie mamy przestawioną strefę czasową ale nic straconego możemy ją zmienić przez polecenie
+
+dpkg-reconfigure tzdata
+
+5) Instalacja firewall-a
+
+Żeby zainstalować naszą zaporę wydajemy polecenie
+
+sudo apt-get install ufw
+Doinstalujemy jeszcze nakładkę gufw, aby mieć możliwość konfiguracji firewalla przy wykorzystaniu narzędzia graficznego
+
+sudo apt-get install gufw
+
+Należy pamiętać żeby zaraz po włączeniu zapory dodać usługi tightvnc oraz ssh do zaufanych bo inaczej stracimy dostęp do naszego VPS-a
+
+6) Instalacja task manager LXTask (menedżera uruchomionych programów)
+
+Żeby zainstalować  wydajemy polecenie
+
+sudo apt-get install lxtask
+To wszystko , teraz wystarczy uruchomić lxtask z menu
+
+
+
+ 
+
+7) Instalacja klienta ftp – filezilla ftp client.
+
+Czasami potrzebujemy przy pomocy VNC przesłać pliki z VPS-a na inny server ftp bez udziału naszegej stacji roboczej
+
+Żeby zainstalować  wydajemy polecenie
+
+sudo apt-get install filezilla
+To wszystko , teraz wystarczy uruchomić filezillę z menu
+
+
+
+ 
+
+8) Instalacja prostego servera www – apache2
+
+Czasami potrzebny będzie zdalny katalog do umieszczenia plików (np fast download wykorzystywany dla serverów gier)
+
+Żeby zainstalować  wydajemy polecenie
+
+sudo apt-get install apache2
+Jak wszystko poszło dobrze to po wpisaniu adresu IP naszego servera VPS w przeglądarce naszym oczom ukaże się następująca strona
+
+ 
+
+Naszą stronę lub pliki umieszczamy w katalogu /var/www/html i od teraz będą widoczne po wpisaniu adresu servera z portem 80
+
+
+
+9) Instalacja 7zip
+
+sudo apt-get install p7zip-full
+
+rozpakowanie 7z x <nazwa pliku> pakowanie 7z u <nazwa pliku>
+
+ 
+
+10) Instalacja graficznego menedżera archiwów file-roller.
+
+Dodaje on graficzną nakładkę do serwera graficznego dzięki czemu praca z archiwami staje się prosta jak na wersji desktopowej .
+
+Znalezione obrazy dla zapytania file-roller
+sudo apt-get update
+sudo apt-get install file-roller
