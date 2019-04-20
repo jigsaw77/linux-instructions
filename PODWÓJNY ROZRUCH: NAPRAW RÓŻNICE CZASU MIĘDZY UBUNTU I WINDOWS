@@ -1,0 +1,72 @@
+Szybka wskazówka dla użytkowników, którzy uruchamiają system Ubuntu i Windows: jeśli na komputerze nie ma czasu, gdy uruchamiasz się ponownie i przełączasz między Ubuntu i Windows, oto jak to naprawić.
+
+W przypadku podwójnego rozruchu i konfliktów czasowych między Windows i Ubuntu, dzieje się tak, ponieważ Ubuntu domyślnie zapisuje czas na zegarze sprzętowym jako UTC, podczas gdy Microsoft Windows zapisuje czas jako czas lokalny, co powoduje konflikty między Ubuntu i Windows.
+
+Poprawka jest dość łatwa i może być stosowana zarówno z Ubuntu, jak i Windows.
+
+
+Napraw różnice czasu między Ubuntu i Windows
+
+A. Aby naprawić różnicę czasu UTC / czasu lokalnego między Ubuntu i Windows z Ubuntu, dzięki czemu Ubuntu używa czasu lokalnego.
+
+Zanim przejdziesz dalej, zauważ, że zgodnie z wiki Ubuntu „ zaletą posiadania zegara sprzętowego jako UTC jest to, że nie musisz zmieniać zegara sprzętowego podczas przechodzenia między strefami czasowymi lub gdy czas letni (DST) zaczyna się lub kończy jako UTC nie ma przesunięć DST ani stref czasowych ”. Nie jest to zalecane i jeśli możesz, powinieneś użyć metody B. i naprawić to w systemie Windows.
+
+W przypadku Ubuntu 16.04 i nowszych uruchom następujące polecenie (dzięki Erwinson Pagtalunan za aktualizację!):
+timedatectl set-local-rtc 1
+
+Następnie możesz sprawdzić, czy Ubuntu używa czasu lokalnego, możesz użyć następującego polecenia:
+timedatectl
+Które powinny wyświetlać następujące „RTC w lokalnym TZ: tak”. Zostanie również wyświetlone ostrzeżenie. Oto pełny wynik polecenia:
+$ timedatectl
+      Local time: Lu 2016-04-25 12:18:22 EEST
+  Universal time: Lu 2016-04-25 09:18:22 UTC
+        RTC time: Lu 2016-04-25 12:18:22
+       Time zone: Europe/Bucharest (EEST, +0300)
+ Network time on: yes
+NTP synchronized: no
+ RTC in local TZ: yes
+
+Warning: The system is configured to read the RTC time in the local time zone.
+         This mode can not be fully supported. It will create various problems
+         with time zone changes and daylight saving time adjustments. The RTC
+         time is never updated, it relies on external facilities to maintain it.
+         If at all possible, use RTC in UTC by calling
+         'timedatectl set-local-rtc 0'.
+
+
+Dla wersji Ubuntu starszych niż 16.04: musisz edytować plik / etc / default / rcS i zastąpić „UTC = yes” przez „UTC = no” (oba bez cudzysłowu). Aby to zrobić automatycznie, po prostu skopiuj / wklej następujące polecenie w terminalu:
+sudo sed -i 's/UTC=yes/UTC=no/' /etc/default/rcS
+A następnie uruchom ponownie.
+
+
+B. Aby naprawić ten problem z Windows (powinien działać z Vista SP2, Windows 7, Server 2008 R2 i Windows 8 / 8.1), poprzez użycie UTC zamiast czasu lokalnego, pobierz THIS Windows plik rejestru i kliknij go dwukrotnie.
+
+Następnie, aby wyłączyć usługę Czas systemu Windows (która nadal zapisuje czas lokalny do RTC niezależnie od powyższego ustawienia rejestru, podczas zamykania), uruchom Wiersz polecenia jako Administrator i wklej to polecenie:
+sc config w32time start= disabled
+I uruchom ponownie.
+
+
+Jak przywrócić zmiany
+
+A. Z Ubuntu: przywrócenie tej zmiany z Ubuntu jest całkiem proste. 
+
+Ubuntu 16.04 i nowsze: aby przywrócić zmiany, po prostu uruchom następujące polecenie:
+timedatectl set-local-rtc 0
+
+Wersje Ubuntu starsze niż 16.04: wszystko, co musisz zrobić, to zamienić „UTC = no” na „UTC = yes” w pliku / etc / default / rcS . Aby to zrobić automatycznie, skopiuj / wklej poniższe polecenie w terminalu:
+sudo sed -i 's/UTC=no/UTC=yes/' /etc/default/rcS
+A następnie uruchom ponownie komputer.
+
+
+B. Z systemu Windows: przywrócenie tej zmiany jest nieco bardziej skomplikowane w systemie Windows. 
+
+Po pierwsze otwórz plik .reg pobrany podczas stosowania poprawki dla systemu Windows (patrz link do pobierania powyżej) za pomocą edytora tekstu i zmień wartość „RealTimeIsUniversal” z „dword: 00000001” na „-” (bez cudzysłowów). Oto jak powinien wyglądać plik po wprowadzeniu tej zmiany:
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\TimeZoneInformation]
+"RealTimeIsUniversal"=-
+Następnie zapisz plik i kliknij go dwukrotnie. 
+
+Następnie uruchom następujące polecenie w wierszu polecenia (które musisz uruchomić jako Administrator), aby ponownie włączyć usługę Czas systemu Windows:
+sc config w32time start= demand
+I na koniec zrestartuj komputer. 
