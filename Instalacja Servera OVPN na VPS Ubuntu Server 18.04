@@ -1,0 +1,50 @@
+Instalacja Servera OVPN na VPS Ubuntu Server 18.04
+
+1.Aktualizacja repo
+
+sudo apt-get update
+
+2.Po pobraniu listy aktualizujemy nasze pakiety:
+
+sudo apt-get upgrade
+
+Jeśli podczas aktualizacji skrypt zapyta nas czy pozwalamy na instalację wciskamy Y na klawiaturze.
+Może to potrwać kilka minut więc czekamy...
+
+3.Następnie przechodzimy do instalacji OpenVPN. Jest wiele możliwości instalacji ale najprościej zrobić to skryptem od Angristan.
+Pobieramy skrypt komendą:
+
+wget https://raw.githubusercontent.com/Angristan/OpenVPN-install/master/openvpn-install.sh
+
+oraz podajemy komendę:
+
+chmod +x openvpn-install.sh
+
+
+I uruchamiamy skrypt komendą: 
+
+./openvpn-install.sh
+
+
+Nie będę się zagłębiać w szczegóły ale skrypt będzie konfigurował naszego OpenVPN i dla naszych potrzeb możemy zostawić domyślnie ustawienia. 
+W tym celu potwierdzamy kilka kroków przyciskiem Enter:
+Potwierdzamy nasz domyślny adres IPv4
+Potwierdzamy domyślny port 1194
+Potwierdzamy protokół, z którego będziemy korzystać czyli UDP
+Potwierdzamy domyślne DNSy (1)
+Potwierdzamy kodowanie (1)
+Potwierdzamy użycie klucza 30172 bitowego (2)
+Potwierdzamy rozmiar klucza RSA (2)
+Potwierdzamy domyślną nazwę klienta OpenVPN (client) - możemy sobie dowolnie zmienić tę nazwę - ja pozostawiam domyślną.
+Potwierdzamy instalację dowolnym przyciskiem.
+
+
+4.Teraz musimy chwilkę poczekać na pobranie potrzebnych plików, konfigurację i utworzenie klucza - troszkę może to potrwać. 
+
+Jeśli wszytko poszło zgodnie z planem to został uruchomiony serwer OpenVPN i utworzony plik client.ovpn do łączenia się z naszym VPN poprzez aplikację OpenVPN.
+
+Teraz aby korzystać z naszego VPN potrzebujemy wygenerowany plik client.ovpn do połączenia się z naszym serwerem. OpenVPN posiada aplikację na androida czy windowsa, do którego wystarczy zaimportować ten plik aby połączyć się z VPN.
+
+5.W linux plik importujemy poleceniem:
+
+sudo nmcli connection import type openvpn file /path/to/client.ovpn
