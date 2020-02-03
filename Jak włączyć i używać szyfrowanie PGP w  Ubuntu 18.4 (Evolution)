@@ -1,0 +1,118 @@
+Niezależnie od tego, czy używasz klienta pracy grupowej Evolution do pracy, czy do poczty e-mail, może być konieczne dodanie
+warstwy zabezpieczeń do komunikacji.
+Do szyfrowania wiadomości, można użyć systemu kryptografii asymetrycznej. W tym systemie każdy uczestnik ma dwa różne klucze: klucz publiczny i klucz prywatny. Gdy ktoś chce przesłać zaszyfrowaną wiadomość, musi użyć swojego klucza publicznego, by wygenerować algorytm szyfrujący. Odbiorca wiadomości, by ją odszyfrować, musi użyć swojego klucza prywatnego.
+
+Informacja. Nigdy nikomu nie udostępniaj swojego klucza prywatnego.
+Protokół używany do szyfrowania wiadomości to PGP (Pretty Good Privacy).
+
+Ale jak to osiągnąć? Jeśli zdarzyło Ci się używać Evolution do poczty e-mail, prawdopodobnie masz już wszystko, czego 
+potrzebujesz, aby tak się stało. Wystarczy odrobina pracy, aby PGP i Evolution zapewniały bezpieczeństwo tych danych.
+
+Zanurzmy się w procesie konfigurowania i korzystania z niego. 
+
+Twój klucz PGP
+Jak powiedziałem, Ubuntu GNOME 16.04 ma wszystko, czego potrzebujesz, od razu po wyjęciu z pudełka, aby 
+pracować z szyfrowaniem w Evolution. Jedyne, co musisz zrobić, to utworzyć klucz PGP. 
+Być może już go masz (w takim przypadku wystarczy wyeksportować klucz do Evolution).
+
+Najpierw przeprowadzę Cię przez proces generowania klucza za pomocą wbudowanego narzędzia graficznego Seahorse. 
+Jeśli otworzysz GNOME Dash i wpiszesz hasła, powinieneś zobaczyć Hasła i Klucze . Kliknij, aby otworzyć aplikację.
+
+Po uruchomieniu aplikacji kliknij Klawisze GnuPG (w lewym panelu nawigacyjnym).
+
+Kliknij przycisk +, wybierz z listy Klucz PGP i kliknij Kontynuuj. Następnie zostaniesz poproszony o podanie pełnego 
+imienia i nazwiska oraz adresu e-mail. Możesz rozwinąć Zaawansowane opcje klucza, aby skonfigurować datę wygaśnięcia, 
+komentarz, siłę klucza i typ szyfrowania.
+Kliknij przycisk Utwórz, wprowadź / zweryfikuj hasło do klucza i kliknij OK. Klucz zacznie się generować. 
+Jednym z zastrzeżeń dotyczących używania aplikacji jest to, że nie daje absolutnie żadnej wskazówki, że klucz jest generowany.
+Więc w tym momencie musisz zrobić pracę. Pisz, otwieraj aplikacje, przesuwaj okna. Jest to konieczne, aby pomóc GPG
+w generowaniu losowych danych niezbędnych do utworzenia klucza.
+
+Po wygenerowaniu klucza wróć do okna głównego i wybierz właśnie utworzony klucz. Kliknij nowy klucz prawym przyciskiem myszy
+i wybierz właściwości. W nowym oknie wybierz Nazwy i podpisy. Kliknij przycisk Podpisz, a następnie po wyświetleniu monitu 
+wybierz opcję Niezobowiązująco, a następnie kliknij Podpisz.
+
+Po podpisaniu klucza jest on gotowy do użycia do szyfrowania w Evolution.
+
+Klucz z wiersza poleceń
+
+Jeśli stwierdzisz, że aplikacja nie odpowiada Twoim potrzebom, zawsze możesz utworzyć klucz GPG za pomocą wiersza polecenia. 
+Jest to również dość proste. Pozwól mi przeprowadzić Cię przez następujące kroki:
+
+Otwórz okno terminala
+
+Wydaj polecenie: 
+# gpg2 –full-gen-key
+
+Odpowiedz na przedstawione pytania (w większości przypadków ustawienia domyślne będą działać poprawnie)
+
+Wprowadź hasło dla klucza GPG
+
+W tym momencie będziesz musiał (podobnie jak podczas korzystania z aplikacji) pracować na komputerze, 
+aby GPG mogła wygenerować losowe dane potrzebne do utworzenia klucza.
+
+Po wygenerowaniu klucza zobaczysz go automatycznie w aplikacji. Następnie możesz użyć aplikacji GUI do podpisania klucza 
+(jest to najłatwiejsza metoda, aby upewnić się, że klucz nadaje się do użycia z Evolution).
+
+Importowanie kluczy
+Jeśli masz już klucz do podpisania, możesz go zaimportować do aplikacji, klikając opcję Plik> Importuj. Przejdź do miejsca, 
+w którym zapisałeś klucz, wybierz go, a następnie kliknij Otwórz. Klucz powinien następnie się zaimportować i być 
+natychmiast dostępny do użycia. Będziesz musiał podpisać klucz (zgodnie z instrukcją wcześniej), aby działał w Evolution.
+
+Eksport twojego klucza publicznego na serwery PGP
+Aby nadawca mógł wysłać zaszyfrowaną wiadomość na Twoją skrzynkę musi posiadać Twój klucz publiczny. Możesz przekazać mu go 
+w formie pliku txt lub umieścić go na serwerach publicznych PGP w tym celu najprościej użyć opcji w aplikaci hasła i klucze:
+Zdalne-> zsynhronizuj i opublikuj klucze
+Możesz wcześniej dodać kilka serwerów w zakładce preferencje (wpisz pgp public server w google :P)
+Klucz publiczny można również wyeksportować na serwer ręcznie kopiuj/wklej jego zawartośc w pole do tego przeznaczone.
+Serwery publiczne między sobą się synhronizują więc wystarczy wysłać na jeden.
+
+Znalezienie klucza publicznego jest jeszcze prostsze, wystarczy wpisać jego nazwę lub przypisany do niego email na jednym
+z publicznych serwerów PGP i pobrać w postaci nazwa.asc (o ile odbiorca go opublikował). Teraz wchodzimy do aplikacji 
+hasła i klucze i importujemy klucz (plik->zainportuj)
+
+
+Włączanie klucza w Evolution
+Teraz możesz już użyć klucza w Evolution. Aby to zrobić, wykonaj następujące kroki:
+
+Kliknij Edytuj> Preferencje
+
+W kontach pocztowych wybierz konto, które ma być używane
+
+Kliknij Edytuj
+
+Kliknij Zabezpieczenia
+
+W polu Identyfikator klucza OpenPGP wprowadź adres e-mail powiązany z utworzonym kluczem lub wpisz jego identyfikator
+
+Kliknij OK
+
+Spowoduje to powiązanie nowo utworzonego klucza z Twoim adresem e-mail.
+
+Szyfrowanie wiadomości e-mail
+Domyślnie wychodzące wiadomości e-mail nie będą szyfrowane. Aby zaszyfrować wiadomość e-mail, wykonaj następujące czynności:
+
+Utwórz nowy e-mail
+
+Kliknij Opcje> Szyfrowanie PGP
+
+Możesz opcjonalnie kliknąć Opcje> Znak PGP (co pomoże odbiorcy wiedzieć, że użyty klucz może być zaufany)
+
+Wyślij wiadomość e-mail
+
+Zaszyfrowana wiadomość e-mail dotrze następnie do skrzynki odbiorczej odbiorcy. Oczywiście, aby odszyfrować wiadomość e-mail
+odbiorca będzie musiał mieć Twój klucz publiczny i swój klucz prywatny
+
+Aby wyeksportować klucz (backup), wrócimy do Seahorse. Oto kroki:
+
+Otwórz aplikację (hasła i klucze)
+
+Kliknij klucz prawym przyciskiem myszy, aby użyć i wybrać właściwości
+
+Wybierz kartę Szczegóły
+
+Kliknij przycisk Eksportuj
+
+Nadaj kluczowi nazwę i kliknij Eksportuj
+
+Po wyświetleniu monitu wprowadź hasło powiązane z kluczem.
