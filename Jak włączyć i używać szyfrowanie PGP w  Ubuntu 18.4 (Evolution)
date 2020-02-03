@@ -11,7 +11,7 @@ potrzebujesz, aby tak się stało. Wystarczy odrobina pracy, aby PGP i Evolution
 Zanurzmy się w procesie konfigurowania i korzystania z niego. 
 
 Twój klucz PGP
-Jak powiedziałem, Ubuntu GNOME 16.04 ma wszystko, czego potrzebujesz, od razu po wyjęciu z pudełka, aby 
+Jak powiedziałem, Ubuntu GNOME 18.04 ma wszystko, czego potrzebujesz, od razu po wyjęciu z pudełka, aby 
 pracować z szyfrowaniem w Evolution. Jedyne, co musisz zrobić, to utworzyć klucz PGP. 
 Być może już go masz (w takim przypadku wystarczy wyeksportować klucz do Evolution).
 
