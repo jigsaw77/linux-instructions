@@ -1,0 +1,77 @@
+ClamAV to silnik antywirusowy typu open source do wykrywania trojanów, wirusów, złośliwego oprogramowania, programów adware, rootkitów i innych złośliwych zagrożeń.
+
+ClamAV zawiera wielowątkowy demon skanera, narzędzia wiersza poleceń do skanowania plików na żądanie i automatyczne aktualizacje podpisów. Jednym z jego głównych zastosowań jest na serwerach pocztowych jako skaner wirusów pocztowych po stronie serwera.
+
+W tym przewodniku nauczymy się instalować i używać ClamAV na Ubuntu 18.04.
+
+Zainstaluj ClamAV
+ClamAV jest dostępny w repozytoriach Ubuntu, dlatego możesz uruchomić poniższe polecenie, aby go zainstalować.
+
+# apt-get update
+# apt-get install clamav clamav-daemon -y
+
+Zaktualizuj bazę danych osobników ClamAV
+Po zakończeniu instalacji należy zaktualizować podpisy ClamAV. Zatrzymaj usługę clamav-freshclam i uruchom polecenie freshclam, aby ręcznie zaktualizować bazę sygnatur.
+
+# systemctl stop clamav-freshclam
+# freshclam
+
+Po zakończeniu aktualizacji bazy wirusów uruchom usługę clamav-freshclam, aby zawsze aktualizowała bazę danych sygnatur w tle.
+
+# systemctl start clamav-freshclam
+
+Możesz teraz używać ClamAV do ochrony systemu przed wirusami. ClamAV jest wyposażony w narzędzie wiersza polecenia o nazwie clamscan, które skanuje pliki i katalogi w poszukiwaniu wirusów.
+
+Aby zobaczyć użycie wiersza polecenia clamscan
+
+# clamscan --help
+
+Najprostsze użycie to przeskanowanie pliku:
+
+# clamscan plik
+
+Lub całego katalogu z podkatalogami, jeśli zostanie znaleziony zainfekowany plik to zostanie wyświetlony. 
+Jeśli chcemy automatycznie go usunąć to dodajemy opcję --remove. Jeśli np. tylko przenieść –-move=/home/kwarantanna
+
+# clamscan --recursive=yes /katalog
+
+Niektóre opcje poleceń clamscan i ich przykładowe użycie:
+
+-h, --help
+     Print help information and exit.
+     # clamscan -h      
+-V, --version
+     Print version number and exit.
+     # clamscan -V
+     ClamAV 0.100.1/25021/Tue Oct  9 15:52:08 2018
+--no-summary
+     Do not display summary at the end of scanning.
+     # clamscan --no-sumary /home/
+-i, --infected
+     Only print infected files.
+     # clamscan -i /home/
+-o, --suppress-ok-results
+     Skip printing OK files 
+--bell
+     Sound bell on virus detection.
+     # clamscan -r --bell -i /home
+-d FILE/DIR, --database=FILE/DIR
+     Load virus database from FILE or load all virus database files from DIR.
+     # clamscan -d /tmp/newclamdb -r /tmp
+-l FILE, --log=FILE
+     Save scan report to FILE.
+-r, --recursive
+     Scan directories recursively. All the subdirectories in the given directory will be scanned.
+     # clamscan -r --remove /
+-f FILE, --file-list=FILE
+     Scan files listed line by line in FILE. 
+--remove[=yes/no(*)]
+     Remove infected files. Be careful as this removes file completely.
+     # clamscan -r --remove /home/USER
+--move=DIRECTORY
+    Move infected files into DIRECTORY. Directory must be writable for the user or unprivileged user running clamscan.
+    # clamscan -r --move=/home/USER/VIRUS /home/
+--copy=DIRECTORY
+    Copy infected files into DIRECTORY. Directory must be writable for the user or unprivileged user running clamscan.
+    # clamsca
+   n -r --copy=/home/USER/VIRUS /home/
