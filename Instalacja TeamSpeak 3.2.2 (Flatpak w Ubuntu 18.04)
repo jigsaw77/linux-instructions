@@ -1,0 +1,28 @@
+TeamSpeak, najpopularniejszy system komunikacji VoIP dla gier online, jest teraz łatwy do zainstalowania 
+i zaktualizowania swojego klienta Linux za pośrednictwem pakietu Flatpak w Ubuntu 18.04 i wyższych.
+
+Wklej poniżej polecenia i uruchom, aby zainstalować flatpak:
+
+#sudo apt-get install flatpak
+
+Dodaj repozytorium flathub, które obsługuje dużą listę aplikacji flatpak:
+
+#flatpak remote-add --if-not-exist flathub https://flathub.org/repo/flathub.flatpakrepo
+
+Na koniec zainstaluj klienta TeamSpeak za pomocą polecenia:
+
+#flatpak install flathub com.teamspeak.TeamSpeak
+
+Po zainstalowaniu uruchom oprogramowanie z menu aplikacji (lub wpisz teamspeak w terminalu) i ciesz się!
+
+Deinstalacja:
+
+Wpisz w terminaluterminal:
+
+#flatpak uninstall com.teamspeak.TeamSpeak
+
+Aktualizacja programu !!!
+
+Aby uaktualnić aplikację wpisz w terminalu:
+
+#flatpak update com.teamspeak.TeamSpeak
